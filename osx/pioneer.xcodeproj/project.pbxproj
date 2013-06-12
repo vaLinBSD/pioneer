@@ -439,6 +439,7 @@
 		4AFBD7BD16412676002928CB /* LuaTextEntry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4AFBD7BA16412676002928CB /* LuaTextEntry.cpp */; };
 		4AFBD7BE16412676002928CB /* TextEntry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4AFBD7BB16412676002928CB /* TextEntry.cpp */; };
 		4AFBD7C016412688002928CB /* FontDescriptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4AFBD7BF16412688002928CB /* FontDescriptor.cpp */; };
+		ED470E61176258A6003599BA /* PicoDDS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED470E5F176258A6003599BA /* PicoDDS.cpp */; };
 		EDAD0512173E798000D7CDD0 /* CoreCount.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDAD0506173E798000D7CDD0 /* CoreCount.cpp */; };
 		EDAD0513173E798000D7CDD0 /* GeoPatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDAD0508173E798000D7CDD0 /* GeoPatch.cpp */; };
 		EDAD0514173E798000D7CDD0 /* GeoPatchContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDAD050A173E798000D7CDD0 /* GeoPatchContext.cpp */; };
@@ -1250,6 +1251,8 @@
 		4AFBD7BB16412676002928CB /* TextEntry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextEntry.cpp; sourceTree = "<group>"; };
 		4AFBD7BC16412676002928CB /* TextEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextEntry.h; sourceTree = "<group>"; };
 		4AFBD7BF16412688002928CB /* FontDescriptor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FontDescriptor.cpp; sourceTree = "<group>"; };
+		ED470E5F176258A6003599BA /* PicoDDS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PicoDDS.cpp; path = PicoDDS/PicoDDS.cpp; sourceTree = "<group>"; };
+		ED470E60176258A6003599BA /* PicoDDS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PicoDDS.h; path = PicoDDS/PicoDDS.h; sourceTree = "<group>"; };
 		ED708A461716C31000762B89 /* DejaVu-license.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "DejaVu-license.txt"; path = "../licenses/DejaVu-license.txt"; sourceTree = "<group>"; };
 		ED708A481716C38900762B89 /* Modelviewer.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = Modelviewer.txt; path = ../Modelviewer.txt; sourceTree = "<group>"; };
 		ED708A491716C52A00762B89 /* COMPILING.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = COMPILING.txt; path = ../COMPILING.txt; sourceTree = "<group>"; };
@@ -1368,6 +1371,7 @@
 				4A37073215A879D100E7E5F6 /* jenkins */,
 				4A1903C2138AA39C00E0229C /* lua */,
 				4AAC9FDC15458FE400116131 /* miniz */,
+				ED470E5E17625889003599BA /* PicoDDS */,
 				4AE46C471607513400308C22 /* vcacheopt */,
 			);
 			name = contrib;
@@ -2237,6 +2241,15 @@
 			path = vcacheopt;
 			sourceTree = "<group>";
 		};
+		ED470E5E17625889003599BA /* PicoDDS */ = {
+			isa = PBXGroup;
+			children = (
+				ED470E5F176258A6003599BA /* PicoDDS.cpp */,
+				ED470E60176258A6003599BA /* PicoDDS.h */,
+			);
+			name = PicoDDS;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -2711,6 +2724,7 @@
 				EDAD0515173E798000D7CDD0 /* GeoPatchID.cpp in Sources */,
 				EDAD0516173E798000D7CDD0 /* GeoPatchJobs.cpp in Sources */,
 				EDAD0517173E798000D7CDD0 /* JobQueue.cpp in Sources */,
+				ED470E61176258A6003599BA /* PicoDDS.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
