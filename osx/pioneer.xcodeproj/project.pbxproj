@@ -129,7 +129,6 @@
 		4A59B4DB1557EAF5009926E5 /* lcorolib.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A59B4D61557EAF5009926E5 /* lcorolib.c */; };
 		4A59B4DC1557EAF5009926E5 /* lctype.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A59B4D71557EAF5009926E5 /* lctype.c */; };
 		4A61E15E13978F1000193E43 /* Background.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A61E15C13978F1000193E43 /* Background.cpp */; };
-		4A62EF2C136979E000919EBB /* DeadVideoLink.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A62EF27136979E000919EBB /* DeadVideoLink.cpp */; };
 		4A62EF2D136979E000919EBB /* FaceVideoLink.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A62EF29136979E000919EBB /* FaceVideoLink.cpp */; };
 		4A671B8A1388C08500657F38 /* libogg.0.dylib in Copy SubLibraries */ = {isa = PBXBuildFile; fileRef = 4A671B861388C07700657F38 /* libogg.0.dylib */; };
 		4A671B8B1388C08500657F38 /* libvorbis.0.dylib in Copy SubLibraries */ = {isa = PBXBuildFile; fileRef = 4A671B871388C07700657F38 /* libvorbis.0.dylib */; };
@@ -440,12 +439,16 @@
 		4AFBD7BE16412676002928CB /* TextEntry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4AFBD7BB16412676002928CB /* TextEntry.cpp */; };
 		4AFBD7C016412688002928CB /* FontDescriptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4AFBD7BF16412688002928CB /* FontDescriptor.cpp */; };
 		ED470E61176258A6003599BA /* PicoDDS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED470E5F176258A6003599BA /* PicoDDS.cpp */; };
-		EDAD0512173E798000D7CDD0 /* CoreCount.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDAD0506173E798000D7CDD0 /* CoreCount.cpp */; };
 		EDAD0513173E798000D7CDD0 /* GeoPatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDAD0508173E798000D7CDD0 /* GeoPatch.cpp */; };
 		EDAD0514173E798000D7CDD0 /* GeoPatchContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDAD050A173E798000D7CDD0 /* GeoPatchContext.cpp */; };
 		EDAD0515173E798000D7CDD0 /* GeoPatchID.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDAD050C173E798000D7CDD0 /* GeoPatchID.cpp */; };
 		EDAD0516173E798000D7CDD0 /* GeoPatchJobs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDAD050E173E798000D7CDD0 /* GeoPatchJobs.cpp */; };
 		EDAD0517173E798000D7CDD0 /* JobQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDAD0510173E798000D7CDD0 /* JobQueue.cpp */; };
+		EDBBAB07179A55980043C99E /* GL2RenderTarget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDBBAB05179A55980043C99E /* GL2RenderTarget.cpp */; };
+		EDBBAB0A179A55EB0043C99E /* Gauge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDBBAB08179A55EB0043C99E /* Gauge.cpp */; };
+		EDBBAB0C179A56090043C99E /* LuaGauge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDBBAB0B179A56090043C99E /* LuaGauge.cpp */; };
+		EDBBAB0E179A561C0043C99E /* LuaNumberLabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDBBAB0D179A561C0043C99E /* LuaNumberLabel.cpp */; };
+		EDBBAB11179A56300043C99E /* NumberLabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDBBAB0F179A56300043C99E /* NumberLabel.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -734,8 +737,6 @@
 		4A59B4D91557EAF5009926E5 /* lua.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = lua.hpp; sourceTree = "<group>"; };
 		4A61E15C13978F1000193E43 /* Background.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Background.cpp; sourceTree = "<group>"; };
 		4A61E15D13978F1000193E43 /* Background.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Background.h; sourceTree = "<group>"; };
-		4A62EF27136979E000919EBB /* DeadVideoLink.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DeadVideoLink.cpp; sourceTree = "<group>"; };
-		4A62EF28136979E000919EBB /* DeadVideoLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeadVideoLink.h; sourceTree = "<group>"; };
 		4A62EF29136979E000919EBB /* FaceVideoLink.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FaceVideoLink.cpp; sourceTree = "<group>"; };
 		4A62EF2A136979E000919EBB /* FaceVideoLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FaceVideoLink.h; sourceTree = "<group>"; };
 		4A62EF2B136979E000919EBB /* VideoLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoLink.h; sourceTree = "<group>"; };
@@ -1256,8 +1257,6 @@
 		ED708A461716C31000762B89 /* DejaVu-license.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "DejaVu-license.txt"; path = "../licenses/DejaVu-license.txt"; sourceTree = "<group>"; };
 		ED708A481716C38900762B89 /* Modelviewer.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = Modelviewer.txt; path = ../Modelviewer.txt; sourceTree = "<group>"; };
 		ED708A491716C52A00762B89 /* COMPILING.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = COMPILING.txt; path = ../COMPILING.txt; sourceTree = "<group>"; };
-		EDAD0506173E798000D7CDD0 /* CoreCount.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CoreCount.cpp; sourceTree = "<group>"; };
-		EDAD0507173E798000D7CDD0 /* CoreCount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreCount.h; sourceTree = "<group>"; };
 		EDAD0508173E798000D7CDD0 /* GeoPatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GeoPatch.cpp; sourceTree = "<group>"; };
 		EDAD0509173E798000D7CDD0 /* GeoPatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeoPatch.h; sourceTree = "<group>"; };
 		EDAD050A173E798000D7CDD0 /* GeoPatchContext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GeoPatchContext.cpp; sourceTree = "<group>"; };
@@ -1268,6 +1267,15 @@
 		EDAD050F173E798000D7CDD0 /* GeoPatchJobs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeoPatchJobs.h; sourceTree = "<group>"; };
 		EDAD0510173E798000D7CDD0 /* JobQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JobQueue.cpp; sourceTree = "<group>"; };
 		EDAD0511173E798000D7CDD0 /* JobQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JobQueue.h; sourceTree = "<group>"; };
+		EDBBAB04179A55590043C99E /* RenderTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderTarget.h; sourceTree = "<group>"; };
+		EDBBAB05179A55980043C99E /* GL2RenderTarget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GL2RenderTarget.cpp; sourceTree = "<group>"; };
+		EDBBAB06179A55980043C99E /* GL2RenderTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GL2RenderTarget.h; sourceTree = "<group>"; };
+		EDBBAB08179A55EB0043C99E /* Gauge.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Gauge.cpp; sourceTree = "<group>"; };
+		EDBBAB09179A55EB0043C99E /* Gauge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gauge.h; sourceTree = "<group>"; };
+		EDBBAB0B179A56090043C99E /* LuaGauge.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LuaGauge.cpp; sourceTree = "<group>"; };
+		EDBBAB0D179A561C0043C99E /* LuaNumberLabel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LuaNumberLabel.cpp; sourceTree = "<group>"; };
+		EDBBAB0F179A56300043C99E /* NumberLabel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NumberLabel.cpp; sourceTree = "<group>"; };
+		EDBBAB10179A56300043C99E /* NumberLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NumberLabel.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1538,19 +1546,19 @@
 		4A4F25B814F524D400FD14A6 /* graphics */ = {
 			isa = PBXGroup;
 			children = (
-				4AAB880315F4AD3500AAF8A8 /* gl2 */,
-				4AAB881115F4AD3500AAF8A8 /* MaterialLegacy.cpp */,
-				4AAB881215F4AD3500AAF8A8 /* MaterialLegacy.h */,
 				4A4F25B914F524D400FD14A6 /* Drawables.cpp */,
 				4A4F25BA14F524D400FD14A6 /* Drawables.h */,
 				4A4F25BB14F524D400FD14A6 /* Frustum.cpp */,
 				4A4F25BC14F524D400FD14A6 /* Frustum.h */,
+				4AAB880315F4AD3500AAF8A8 /* gl2 */,
 				4A4F25BD14F524D400FD14A6 /* Graphics.cpp */,
 				4A4F25BE14F524D400FD14A6 /* Graphics.h */,
 				4AEC8A1815C7886A00B281C3 /* Light.cpp */,
 				4AEC8A1915C7886A00B281C3 /* Light.h */,
 				4A4F25C014F524D400FD14A6 /* Material.cpp */,
 				4A4F25C114F524D400FD14A6 /* Material.h */,
+				4AAB881115F4AD3500AAF8A8 /* MaterialLegacy.cpp */,
+				4AAB881215F4AD3500AAF8A8 /* MaterialLegacy.h */,
 				4A4F25C214F524D400FD14A6 /* Renderer.cpp */,
 				4A4F25C314F524D400FD14A6 /* Renderer.h */,
 				4A4F25C414F524D400FD14A6 /* RendererGL2.cpp */,
@@ -1558,6 +1566,7 @@
 				4A4F25C614F524D400FD14A6 /* RendererGLBuffers.h */,
 				4A4F25C714F524D400FD14A6 /* RendererLegacy.cpp */,
 				4A4F25C814F524D400FD14A6 /* RendererLegacy.h */,
+				EDBBAB04179A55590043C99E /* RenderTarget.h */,
 				4A4F25CD14F524D400FD14A6 /* StaticMesh.cpp */,
 				4A4F25CE14F524D400FD14A6 /* StaticMesh.h */,
 				4A4F25CF14F524D400FD14A6 /* Surface.h */,
@@ -1627,13 +1636,9 @@
 				4A6C4C1D13532FC300FDD53F /* CommodityTradeWidget.cpp */,
 				4A6C4C1E13532FC300FDD53F /* CommodityTradeWidget.h */,
 				4A1903C1138AA39C00E0229C /* contrib */,
-				EDAD0506173E798000D7CDD0 /* CoreCount.cpp */,
-				EDAD0507173E798000D7CDD0 /* CoreCount.h */,
 				4A107C2B1525AB0D00EF9FAC /* CRC32.cpp */,
 				4A107C2C1525AB0D00EF9FAC /* CRC32.h */,
 				4AF222DF162103EA00BED38E /* Cutscene.h */,
-				4A62EF27136979E000919EBB /* DeadVideoLink.cpp */,
-				4A62EF28136979E000919EBB /* DeadVideoLink.h */,
 				4A973BF31618688F0029562D /* DeathView.cpp */,
 				4A973BF41618688F0029562D /* DeathView.h */,
 				4A99371A1368355400EA0EE5 /* DeleteEmitter.h */,
@@ -1951,6 +1956,8 @@
 				4AAB880515F4AD3500AAF8A8 /* GeoSphereMaterial.h */,
 				4AAB880615F4AD3500AAF8A8 /* GL2Material.cpp */,
 				4AAB880715F4AD3500AAF8A8 /* GL2Material.h */,
+				EDBBAB05179A55980043C99E /* GL2RenderTarget.cpp */,
+				EDBBAB06179A55980043C99E /* GL2RenderTarget.h */,
 				4AAB880815F4AD3500AAF8A8 /* MultiMaterial.cpp */,
 				4AAB880915F4AD3500AAF8A8 /* MultiMaterial.h */,
 				4AAB880A15F4AD3500AAF8A8 /* Program.cpp */,
@@ -2068,6 +2075,8 @@
 				4AA4A8D5164D0EB10006C3BF /* Expand.h */,
 				4ABF304616335A1100664653 /* FloatContainer.cpp */,
 				4ABF304716335A1100664653 /* FloatContainer.h */,
+				EDBBAB08179A55EB0043C99E /* Gauge.cpp */,
+				EDBBAB09179A55EB0043C99E /* Gauge.h */,
 				4AA4A8D6164D0EB10006C3BF /* Gradient.cpp */,
 				4AA4A8D7164D0EB10006C3BF /* Gradient.h */,
 				4ABF304816335A1100664653 /* Grid.cpp */,
@@ -2092,6 +2101,7 @@
 				4ABF305916335A1100664653 /* LuaContext.cpp */,
 				4ABF305A16335A1100664653 /* LuaDropDown.cpp */,
 				4AA4A8D8164D0EB10006C3BF /* LuaExpand.cpp */,
+				EDBBAB0B179A56090043C99E /* LuaGauge.cpp */,
 				4AA4A8D9164D0EB10006C3BF /* LuaGradient.cpp */,
 				4ABF305B16335A1100664653 /* LuaGrid.cpp */,
 				4A4D25DE167335F5003BC9D5 /* LuaIcon.cpp */,
@@ -2100,6 +2110,7 @@
 				4ABF305E16335A1100664653 /* LuaList.cpp */,
 				4ABF305F16335A1100664653 /* LuaMargin.cpp */,
 				4ABF306016335A1100664653 /* LuaMultiLineText.cpp */,
+				EDBBAB0D179A561C0043C99E /* LuaNumberLabel.cpp */,
 				4ABF306116335A1100664653 /* LuaScroller.cpp */,
 				4ABF306216335A1100664653 /* LuaSignal.h */,
 				4ABF306316335A1100664653 /* LuaSingle.cpp */,
@@ -2111,6 +2122,8 @@
 				4ABF306816335A1100664653 /* Margin.h */,
 				4ABF306916335A1100664653 /* MultiLineText.cpp */,
 				4ABF306A16335A1100664653 /* MultiLineText.h */,
+				EDBBAB0F179A56300043C99E /* NumberLabel.cpp */,
+				EDBBAB10179A56300043C99E /* NumberLabel.h */,
 				4ABF306B16335A1100664653 /* Point.h */,
 				4ABF306C16335A1100664653 /* Scroller.cpp */,
 				4ABF306D16335A1100664653 /* Scroller.h */,
@@ -2420,7 +2433,6 @@
 				4A9937671368355500EA0EE5 /* LuaStarSystem.cpp in Sources */,
 				4A9937681368355500EA0EE5 /* LuaTimer.cpp in Sources */,
 				4A99376A1368355500EA0EE5 /* LuaUtils.cpp in Sources */,
-				4A62EF2C136979E000919EBB /* DeadVideoLink.cpp in Sources */,
 				4A62EF2D136979E000919EBB /* FaceVideoLink.cpp in Sources */,
 				4A82AA861386969B0028CCED /* GameConfig.cpp in Sources */,
 				4A19038C138AA33300E0229C /* Gui.cpp in Sources */,
@@ -2718,13 +2730,17 @@
 				4A8AE19617208CE50005C2D9 /* LuaPropertiedObject.cpp in Sources */,
 				4A8AE19717208CE50005C2D9 /* PropertyMap.cpp in Sources */,
 				4AA9F6CC17288E0900124C2E /* TerrainHeightEllipsoid.cpp in Sources */,
-				EDAD0512173E798000D7CDD0 /* CoreCount.cpp in Sources */,
 				EDAD0513173E798000D7CDD0 /* GeoPatch.cpp in Sources */,
 				EDAD0514173E798000D7CDD0 /* GeoPatchContext.cpp in Sources */,
 				EDAD0515173E798000D7CDD0 /* GeoPatchID.cpp in Sources */,
 				EDAD0516173E798000D7CDD0 /* GeoPatchJobs.cpp in Sources */,
 				EDAD0517173E798000D7CDD0 /* JobQueue.cpp in Sources */,
 				ED470E61176258A6003599BA /* PicoDDS.cpp in Sources */,
+				EDBBAB07179A55980043C99E /* GL2RenderTarget.cpp in Sources */,
+				EDBBAB0A179A55EB0043C99E /* Gauge.cpp in Sources */,
+				EDBBAB0C179A56090043C99E /* LuaGauge.cpp in Sources */,
+				EDBBAB0E179A561C0043C99E /* LuaNumberLabel.cpp in Sources */,
+				EDBBAB11179A56300043C99E /* NumberLabel.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
