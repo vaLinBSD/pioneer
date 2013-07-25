@@ -438,6 +438,8 @@
 		4AFBD7BD16412676002928CB /* LuaTextEntry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4AFBD7BA16412676002928CB /* LuaTextEntry.cpp */; };
 		4AFBD7BE16412676002928CB /* TextEntry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4AFBD7BB16412676002928CB /* TextEntry.cpp */; };
 		4AFBD7C016412688002928CB /* FontDescriptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4AFBD7BF16412688002928CB /* FontDescriptor.cpp */; };
+		ED0612AE17A1929200EC28EF /* LuaTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED0612AB17A1929200EC28EF /* LuaTable.cpp */; };
+		ED0612AF17A1929200EC28EF /* Table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED0612AC17A1929200EC28EF /* Table.cpp */; };
 		ED470E61176258A6003599BA /* PicoDDS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED470E5F176258A6003599BA /* PicoDDS.cpp */; };
 		EDAD0513173E798000D7CDD0 /* GeoPatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDAD0508173E798000D7CDD0 /* GeoPatch.cpp */; };
 		EDAD0514173E798000D7CDD0 /* GeoPatchContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDAD050A173E798000D7CDD0 /* GeoPatchContext.cpp */; };
@@ -1252,6 +1254,9 @@
 		4AFBD7BB16412676002928CB /* TextEntry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextEntry.cpp; sourceTree = "<group>"; };
 		4AFBD7BC16412676002928CB /* TextEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextEntry.h; sourceTree = "<group>"; };
 		4AFBD7BF16412688002928CB /* FontDescriptor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FontDescriptor.cpp; sourceTree = "<group>"; };
+		ED0612AB17A1929200EC28EF /* LuaTable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LuaTable.cpp; sourceTree = "<group>"; };
+		ED0612AC17A1929200EC28EF /* Table.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Table.cpp; sourceTree = "<group>"; };
+		ED0612AD17A1929200EC28EF /* Table.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Table.h; sourceTree = "<group>"; };
 		ED470E5F176258A6003599BA /* PicoDDS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PicoDDS.cpp; path = PicoDDS/PicoDDS.cpp; sourceTree = "<group>"; };
 		ED470E60176258A6003599BA /* PicoDDS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PicoDDS.h; path = PicoDDS/PicoDDS.h; sourceTree = "<group>"; };
 		ED708A461716C31000762B89 /* DejaVu-license.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "DejaVu-license.txt"; path = "../licenses/DejaVu-license.txt"; sourceTree = "<group>"; };
@@ -2116,6 +2121,7 @@
 				4ABF306316335A1100664653 /* LuaSingle.cpp */,
 				4ABF306416335A1100664653 /* LuaSlider.cpp */,
 				4A0F25CB165CF00D00208507 /* LuaSmallButton.cpp */,
+				ED0612AB17A1929200EC28EF /* LuaTable.cpp */,
 				4AFBD7BA16412676002928CB /* LuaTextEntry.cpp */,
 				4ABF306516335A1100664653 /* LuaWidget.cpp */,
 				4ABF306716335A1100664653 /* Margin.cpp */,
@@ -2135,6 +2141,8 @@
 				4ABF307316335A1100664653 /* Slider.h */,
 				4A0F25CC165CF00D00208507 /* SmallButton.cpp */,
 				4A0F25CD165CF00D00208507 /* SmallButton.h */,
+				ED0612AC17A1929200EC28EF /* Table.cpp */,
+				ED0612AD17A1929200EC28EF /* Table.h */,
 				4AFBD7BB16412676002928CB /* TextEntry.cpp */,
 				4AFBD7BC16412676002928CB /* TextEntry.h */,
 				4ABF307416335A1100664653 /* TextLayout.cpp */,
@@ -2741,6 +2749,8 @@
 				EDBBAB0C179A56090043C99E /* LuaGauge.cpp in Sources */,
 				EDBBAB0E179A561C0043C99E /* LuaNumberLabel.cpp in Sources */,
 				EDBBAB11179A56300043C99E /* NumberLabel.cpp in Sources */,
+				ED0612AE17A1929200EC28EF /* LuaTable.cpp in Sources */,
+				ED0612AF17A1929200EC28EF /* Table.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
