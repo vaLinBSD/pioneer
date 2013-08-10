@@ -193,8 +193,8 @@
 		4A7611201611A7B000A06F79 /* libpng15.15.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A76111F1611A7B000A06F79 /* libpng15.15.dylib */; };
 		4A7611221611A80C00A06F79 /* libz.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7611211611A80C00A06F79 /* libz.1.dylib */; };
 		4A7611231611A88C00A06F79 /* libz.1.dylib in Copy SubLibraries */ = {isa = PBXBuildFile; fileRef = 4A7611211611A80C00A06F79 /* libz.1.dylib */; };
-		4A7611261611A8C800A06F79 /* libGLEW.1.9.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7611251611A8C800A06F79 /* libGLEW.1.9.0.dylib */; };
-		4A7611271611A8DB00A06F79 /* libGLEW.1.9.0.dylib in Copy Libraries */ = {isa = PBXBuildFile; fileRef = 4A7611251611A8C800A06F79 /* libGLEW.1.9.0.dylib */; };
+		4A7611261611A8C800A06F79 /* libGLEW.1.10.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7611251611A8C800A06F79 /* libGLEW.1.10.0.dylib */; };
+		4A7611271611A8DB00A06F79 /* libGLEW.1.10.0.dylib in Copy Libraries */ = {isa = PBXBuildFile; fileRef = 4A7611251611A8C800A06F79 /* libGLEW.1.10.0.dylib */; };
 		4A76112A1611A92400A06F79 /* libFLAC.8.dylib in Copy SubLibraries */ = {isa = PBXBuildFile; fileRef = 4A7611281611A90B00A06F79 /* libFLAC.8.dylib */; };
 		4A82AA861386969B0028CCED /* GameConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A82AA7D1386969B0028CCED /* GameConfig.cpp */; };
 		4A84CB7D14595D850051C848 /* enum_table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A84CB7B14595D850051C848 /* enum_table.cpp */; };
@@ -451,6 +451,7 @@
 		EDBBAB0C179A56090043C99E /* LuaGauge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDBBAB0B179A56090043C99E /* LuaGauge.cpp */; };
 		EDBBAB0E179A561C0043C99E /* LuaNumberLabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDBBAB0D179A561C0043C99E /* LuaNumberLabel.cpp */; };
 		EDBBAB11179A56300043C99E /* NumberLabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDBBAB0F179A56300043C99E /* NumberLabel.cpp */; };
+		EDF1148717B6352200392ED1 /* FresnelColourMaterial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDF1148517B6352200392ED1 /* FresnelColourMaterial.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -510,7 +511,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				4ACDB6D5167881AF0069FA03 /* libassimp.3.0.255.dylib in Copy Libraries */,
-				4A7611271611A8DB00A06F79 /* libGLEW.1.9.0.dylib in Copy Libraries */,
+				4A7611271611A8DB00A06F79 /* libGLEW.1.10.0.dylib in Copy Libraries */,
 				4A5619D813867661002A904C /* libvorbisfile.3.dylib in Copy Libraries */,
 				4A5619D313866B5B002A904C /* libfreetype.6.dylib in Copy Libraries */,
 				4AE5CA411383E6AA00B55DEB /* libSDL_image-1.2.0.dylib in Copy Libraries */,
@@ -866,7 +867,7 @@
 		4A76111C1611A76C00A06F79 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/OpenGL.framework; sourceTree = DEVELOPER_DIR; };
 		4A76111F1611A7B000A06F79 /* libpng15.15.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpng15.15.dylib; path = ../../../../../../usr/local/lib/libpng15.15.dylib; sourceTree = "<group>"; };
 		4A7611211611A80C00A06F79 /* libz.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.dylib; path = ../../../../../../usr/lib/libz.1.dylib; sourceTree = "<group>"; };
-		4A7611251611A8C800A06F79 /* libGLEW.1.9.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.1.9.0.dylib; path = /usr/local/lib/libGLEW.1.9.0.dylib; sourceTree = "<absolute>"; };
+		4A7611251611A8C800A06F79 /* libGLEW.1.10.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.1.10.0.dylib; path = /usr/local/lib/libGLEW.1.10.0.dylib; sourceTree = "<absolute>"; };
 		4A7611281611A90B00A06F79 /* libFLAC.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libFLAC.8.dylib; path = ../../../../../../usr/local/lib/libFLAC.8.dylib; sourceTree = "<group>"; };
 		4A76112B1611AA5F00A06F79 /* CC-BY-SA-3.0.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "CC-BY-SA-3.0.txt"; path = "../licenses/CC-BY-SA-3.0.txt"; sourceTree = "<group>"; };
 		4A76112C1611AA5F00A06F79 /* GPL-3.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "GPL-3.txt"; path = "../licenses/GPL-3.txt"; sourceTree = "<group>"; };
@@ -1281,6 +1282,8 @@
 		EDBBAB0D179A561C0043C99E /* LuaNumberLabel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LuaNumberLabel.cpp; sourceTree = "<group>"; };
 		EDBBAB0F179A56300043C99E /* NumberLabel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NumberLabel.cpp; sourceTree = "<group>"; };
 		EDBBAB10179A56300043C99E /* NumberLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NumberLabel.h; sourceTree = "<group>"; };
+		EDF1148517B6352200392ED1 /* FresnelColourMaterial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FresnelColourMaterial.cpp; sourceTree = "<group>"; };
+		EDF1148617B6352200392ED1 /* FresnelColourMaterial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FresnelColourMaterial.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1289,7 +1292,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4ACDB6D416787A6A0069FA03 /* libassimp.3.0.255.dylib in Frameworks */,
-				4A7611261611A8C800A06F79 /* libGLEW.1.9.0.dylib in Frameworks */,
+				4A7611261611A8C800A06F79 /* libGLEW.1.10.0.dylib in Frameworks */,
 				4A7611221611A80C00A06F79 /* libz.1.dylib in Frameworks */,
 				4A7611201611A7B000A06F79 /* libpng15.15.dylib in Frameworks */,
 				4A76111D1611A76C00A06F79 /* OpenGL.framework in Frameworks */,
@@ -1482,7 +1485,7 @@
 			children = (
 				4ACDB6D316787A6A0069FA03 /* libassimp.3.0.255.dylib */,
 				4A5619CE13866622002A904C /* libfreetype.6.dylib */,
-				4A7611251611A8C800A06F79 /* libGLEW.1.9.0.dylib */,
+				4A7611251611A8C800A06F79 /* libGLEW.1.10.0.dylib */,
 				4AE5CA3A1383E2D000B55DEB /* libSDL-1.2.0.dylib */,
 				4AE5CA3D1383E63C00B55DEB /* libSDL_image-1.2.0.dylib */,
 				4AE5CA3F1383E65B00B55DEB /* libSDL_sound-1.0.1.0.2.dylib */,
@@ -1957,6 +1960,8 @@
 		4AAB880315F4AD3500AAF8A8 /* gl2 */ = {
 			isa = PBXGroup;
 			children = (
+				EDF1148517B6352200392ED1 /* FresnelColourMaterial.cpp */,
+				EDF1148617B6352200392ED1 /* FresnelColourMaterial.h */,
 				4AAB880415F4AD3500AAF8A8 /* GeoSphereMaterial.cpp */,
 				4AAB880515F4AD3500AAF8A8 /* GeoSphereMaterial.h */,
 				4AAB880615F4AD3500AAF8A8 /* GL2Material.cpp */,
@@ -2751,6 +2756,7 @@
 				EDBBAB11179A56300043C99E /* NumberLabel.cpp in Sources */,
 				ED0612AE17A1929200EC28EF /* LuaTable.cpp in Sources */,
 				ED0612AF17A1929200EC28EF /* Table.cpp in Sources */,
+				EDF1148717B6352200392ED1 /* FresnelColourMaterial.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
