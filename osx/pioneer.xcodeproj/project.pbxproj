@@ -451,6 +451,7 @@
 		EDBBAB0C179A56090043C99E /* LuaGauge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDBBAB0B179A56090043C99E /* LuaGauge.cpp */; };
 		EDBBAB0E179A561C0043C99E /* LuaNumberLabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDBBAB0D179A561C0043C99E /* LuaNumberLabel.cpp */; };
 		EDBBAB11179A56300043C99E /* NumberLabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDBBAB0F179A56300043C99E /* NumberLabel.cpp */; };
+		EDC935E417C917CE0007964E /* TerrainColorEarthLikeHeightmapped.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDC935E317C917CE0007964E /* TerrainColorEarthLikeHeightmapped.cpp */; };
 		EDF1148717B6352200392ED1 /* FresnelColourMaterial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDF1148517B6352200392ED1 /* FresnelColourMaterial.cpp */; };
 /* End PBXBuildFile section */
 
@@ -1282,6 +1283,7 @@
 		EDBBAB0D179A561C0043C99E /* LuaNumberLabel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LuaNumberLabel.cpp; sourceTree = "<group>"; };
 		EDBBAB0F179A56300043C99E /* NumberLabel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NumberLabel.cpp; sourceTree = "<group>"; };
 		EDBBAB10179A56300043C99E /* NumberLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NumberLabel.h; sourceTree = "<group>"; };
+		EDC935E317C917CE0007964E /* TerrainColorEarthLikeHeightmapped.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TerrainColorEarthLikeHeightmapped.cpp; sourceTree = "<group>"; };
 		EDF1148517B6352200392ED1 /* FresnelColourMaterial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FresnelColourMaterial.cpp; sourceTree = "<group>"; };
 		EDF1148617B6352200392ED1 /* FresnelColourMaterial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FresnelColourMaterial.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -2000,6 +2002,7 @@
 				4AB7D5D51472A83E00158DE4 /* TerrainColorDeadWithWater.cpp */,
 				4AB7D5D61472A83E00158DE4 /* TerrainColorDesert.cpp */,
 				4AB7D5D71472A83E00158DE4 /* TerrainColorEarthLike.cpp */,
+				EDC935E317C917CE0007964E /* TerrainColorEarthLikeHeightmapped.cpp */,
 				4AB7D5D81472A83E00158DE4 /* TerrainColorGGJupiter.cpp */,
 				4AB7D5D91472A83E00158DE4 /* TerrainColorGGNeptune.cpp */,
 				4AB7D5DA1472A83E00158DE4 /* TerrainColorGGNeptune2.cpp */,
@@ -2757,6 +2760,7 @@
 				ED0612AE17A1929200EC28EF /* LuaTable.cpp in Sources */,
 				ED0612AF17A1929200EC28EF /* Table.cpp in Sources */,
 				EDF1148717B6352200392ED1 /* FresnelColourMaterial.cpp in Sources */,
+				EDC935E417C917CE0007964E /* TerrainColorEarthLikeHeightmapped.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
