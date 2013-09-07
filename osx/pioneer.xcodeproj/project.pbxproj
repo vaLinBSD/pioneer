@@ -441,6 +441,7 @@
 		ED0612AE17A1929200EC28EF /* LuaTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED0612AB17A1929200EC28EF /* LuaTable.cpp */; };
 		ED0612AF17A1929200EC28EF /* Table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED0612AC17A1929200EC28EF /* Table.cpp */; };
 		ED470E61176258A6003599BA /* PicoDDS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED470E5F176258A6003599BA /* PicoDDS.cpp */; };
+		ED93B69717DB3098006F3419 /* jsoncpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED93B69617DB3098006F3419 /* jsoncpp.cpp */; };
 		EDAD0513173E798000D7CDD0 /* GeoPatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDAD0508173E798000D7CDD0 /* GeoPatch.cpp */; };
 		EDAD0514173E798000D7CDD0 /* GeoPatchContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDAD050A173E798000D7CDD0 /* GeoPatchContext.cpp */; };
 		EDAD0515173E798000D7CDD0 /* GeoPatchID.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDAD050C173E798000D7CDD0 /* GeoPatchID.cpp */; };
@@ -1264,6 +1265,8 @@
 		ED708A461716C31000762B89 /* DejaVu-license.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "DejaVu-license.txt"; path = "../licenses/DejaVu-license.txt"; sourceTree = "<group>"; };
 		ED708A481716C38900762B89 /* Modelviewer.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = Modelviewer.txt; path = ../Modelviewer.txt; sourceTree = "<group>"; };
 		ED708A491716C52A00762B89 /* COMPILING.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = COMPILING.txt; path = ../COMPILING.txt; sourceTree = "<group>"; };
+		ED93B69517DB3098006F3419 /* json.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = json.h; path = ../json/json.h; sourceTree = "<group>"; };
+		ED93B69617DB3098006F3419 /* jsoncpp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = jsoncpp.cpp; path = ../json/jsoncpp.cpp; sourceTree = "<group>"; };
 		EDAD0508173E798000D7CDD0 /* GeoPatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GeoPatch.cpp; sourceTree = "<group>"; };
 		EDAD0509173E798000D7CDD0 /* GeoPatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeoPatch.h; sourceTree = "<group>"; };
 		EDAD050A173E798000D7CDD0 /* GeoPatchContext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GeoPatchContext.cpp; sourceTree = "<group>"; };
@@ -1387,6 +1390,7 @@
 			isa = PBXGroup;
 			children = (
 				4A37073215A879D100E7E5F6 /* jenkins */,
+				ED93B69417DB307C006F3419 /* json */,
 				4A1903C2138AA39C00E0229C /* lua */,
 				4AAC9FDC15458FE400116131 /* miniz */,
 				ED470E5E17625889003599BA /* PicoDDS */,
@@ -2279,6 +2283,16 @@
 			name = PicoDDS;
 			sourceTree = "<group>";
 		};
+		ED93B69417DB307C006F3419 /* json */ = {
+			isa = PBXGroup;
+			children = (
+				ED93B69517DB3098006F3419 /* json.h */,
+				ED93B69617DB3098006F3419 /* jsoncpp.cpp */,
+			);
+			name = json;
+			path = lua;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -2761,6 +2775,7 @@
 				ED0612AF17A1929200EC28EF /* Table.cpp in Sources */,
 				EDF1148717B6352200392ED1 /* FresnelColourMaterial.cpp in Sources */,
 				EDC935E417C917CE0007964E /* TerrainColorEarthLikeHeightmapped.cpp in Sources */,
+				ED93B69717DB3098006F3419 /* jsoncpp.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
