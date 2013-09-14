@@ -440,7 +440,6 @@
 		ED0612AF17A1929200EC28EF /* Table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED0612AC17A1929200EC28EF /* Table.cpp */; };
 		ED470E61176258A6003599BA /* PicoDDS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED470E5F176258A6003599BA /* PicoDDS.cpp */; };
 		ED7D2AE717E45A2D00ACD48B /* glew.c in Sources */ = {isa = PBXBuildFile; fileRef = ED7D2AE217E45A2D00ACD48B /* glew.c */; };
-		ED7D2AEA17E45AF200ACD48B /* GLEW.txt in Resources */ = {isa = PBXBuildFile; fileRef = ED7D2AE917E45AF200ACD48B /* GLEW.txt */; };
 		ED93B69717DB3098006F3419 /* jsoncpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED93B69617DB3098006F3419 /* jsoncpp.cpp */; };
 		EDAD0513173E798000D7CDD0 /* GeoPatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDAD0508173E798000D7CDD0 /* GeoPatch.cpp */; };
 		EDAD0514173E798000D7CDD0 /* GeoPatchContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDAD050A173E798000D7CDD0 /* GeoPatchContext.cpp */; };
@@ -452,6 +451,17 @@
 		EDBBAB0C179A56090043C99E /* LuaGauge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDBBAB0B179A56090043C99E /* LuaGauge.cpp */; };
 		EDBBAB0E179A561C0043C99E /* LuaNumberLabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDBBAB0D179A561C0043C99E /* LuaNumberLabel.cpp */; };
 		EDBBAB11179A56300043C99E /* NumberLabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDBBAB0F179A56300043C99E /* NumberLabel.cpp */; };
+		EDC79D6A17E46572008EB022 /* AUTHORS.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4A9822AA142DF93D00B423F1 /* AUTHORS.txt */; };
+		EDC79D6B17E46572008EB022 /* CC-BY-SA-3.0.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4A76112B1611AA5F00A06F79 /* CC-BY-SA-3.0.txt */; };
+		EDC79D6C17E46572008EB022 /* Changelog.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4A9822B3142E02AF00B423F1 /* Changelog.txt */; };
+		EDC79D6D17E46572008EB022 /* COMPILING.txt in Resources */ = {isa = PBXBuildFile; fileRef = ED708A491716C52A00762B89 /* COMPILING.txt */; };
+		EDC79D6E17E46572008EB022 /* DejaVu-license.txt in Resources */ = {isa = PBXBuildFile; fileRef = ED708A461716C31000762B89 /* DejaVu-license.txt */; };
+		EDC79D6F17E46572008EB022 /* GLEW.txt in Resources */ = {isa = PBXBuildFile; fileRef = ED7D2AE917E45AF200ACD48B /* GLEW.txt */; };
+		EDC79D7017E46572008EB022 /* GPL-3.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4A76112C1611AA5F00A06F79 /* GPL-3.txt */; };
+		EDC79D7117E46572008EB022 /* Modelviewer.txt in Resources */ = {isa = PBXBuildFile; fileRef = ED708A481716C38900762B89 /* Modelviewer.txt */; };
+		EDC79D7217E46572008EB022 /* Quickstart.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4A9822AD142E00B100B423F1 /* Quickstart.txt */; };
+		EDC79D7317E46572008EB022 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4A9822AE142E00B100B423F1 /* README.txt */; };
+		EDC79D7417E46572008EB022 /* SIL-1.1.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4A76112D1611AA5F00A06F79 /* SIL-1.1.txt */; };
 		EDC935E417C917CE0007964E /* TerrainColorEarthLikeHeightmapped.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDC935E317C917CE0007964E /* TerrainColorEarthLikeHeightmapped.cpp */; };
 		EDF1148717B6352200392ED1 /* FresnelColourMaterial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDF1148517B6352200392ED1 /* FresnelColourMaterial.cpp */; };
 /* End PBXBuildFile section */
@@ -2365,11 +2375,21 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EDC79D6A17E46572008EB022 /* AUTHORS.txt in Resources */,
+				EDC79D6B17E46572008EB022 /* CC-BY-SA-3.0.txt in Resources */,
+				EDC79D6C17E46572008EB022 /* Changelog.txt in Resources */,
+				EDC79D6D17E46572008EB022 /* COMPILING.txt in Resources */,
+				EDC79D6E17E46572008EB022 /* DejaVu-license.txt in Resources */,
+				EDC79D6F17E46572008EB022 /* GLEW.txt in Resources */,
+				EDC79D7017E46572008EB022 /* GPL-3.txt in Resources */,
+				EDC79D7117E46572008EB022 /* Modelviewer.txt in Resources */,
+				EDC79D7217E46572008EB022 /* Quickstart.txt in Resources */,
+				EDC79D7317E46572008EB022 /* README.txt in Resources */,
+				EDC79D7417E46572008EB022 /* SIL-1.1.txt in Resources */,
 				4A20B11C13531CD10020F43E /* Credits.rtf in Resources */,
 				4A20B11D13531CD10020F43E /* InfoPlist.strings in Resources */,
 				4A20B12013531E950020F43E /* pioneerApp.xib in Resources */,
 				4A8563FD148655DA008121E1 /* pioneer-logo.icns in Resources */,
-				ED7D2AEA17E45AF200ACD48B /* GLEW.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
