@@ -24,18 +24,18 @@ end
 local loadGame = function (path)
 	local ok, err = pcall(Game.LoadGame, path)
 	if not ok then
-		ErrorScreen.ShowError('Could not load game: ' .. err)
+		ErrorScreen.ShowError(t('Could not load game: ') .. err)
 	end
 end
 
 local doLoadDialog = function ()
-	ui:SetInnerWidget(
+	ui:NewLayer(
 		ui.templates.FileDialog({
 			title       = t("Select game to load..."),
 			path        = "savefiles",
 			selectLabel = t("Load game"),
 			onSelect    = loadGame,
-			onCancel    = function () ui:SetInnerWidget(ui.templates.MainMenu()) end
+			onCancel    = function () ui:DropLayer() end
 		})
 	)
 end
