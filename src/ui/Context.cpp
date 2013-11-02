@@ -43,6 +43,7 @@ Context::Context(LuaManager *lua, Graphics::Renderer *renderer, int width, int h
 	m_templateStore = LuaRef(l, -1);
 
 	SetSize(Point(m_width,m_height));
+	m_visible = true;
 
 	NewLayer();
 
@@ -73,7 +74,6 @@ Layer *Context::NewLayer()
 	Layer *layer = new Layer(this);
 	AddWidget(layer);
 	SetWidgetDimensions(layer, Point(0), Point(m_width, m_height));
-	layer->SetLayer(layer);
 	m_layers.push_back(layer);
 	m_needsLayout = true;
 	return layer;
@@ -84,7 +84,7 @@ void Context::DropLayer()
 	// dropping the last layer would be bad
 	assert(m_layers.size() > 1);
 	RemoveWidget(m_layers.back());
-	m_layers.resize(m_layers.size()-1);
+	m_layers.pop_back();
 	m_needsLayout = true;
 }
 

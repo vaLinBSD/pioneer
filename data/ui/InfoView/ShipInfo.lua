@@ -24,6 +24,17 @@ local shipInfo = function (args)
 
 	local stats = Game.player:GetStats()
 
+	local mass_with_fuel = stats.totalMass + stats.fuelMassLeft
+	local mass_with_fuel_kg = 1000 * mass_with_fuel
+
+	-- ship stats mass is in tonnes; scale by 1000 to convert to kg
+	local fwd_acc = -shipDef.linearThrust.FORWARD / mass_with_fuel_kg
+	local bwd_acc = shipDef.linearThrust.REVERSE / mass_with_fuel_kg
+	local up_acc = shipDef.linearThrust.UP / mass_with_fuel_kg
+
+	-- delta-v calculation according to http://en.wikipedia.org/wiki/Tsiolkovsky_rocket_equation
+	local deltav = shipDef.effectiveExhaustVelocity * math.log((stats.totalMass + stats.fuelMassLeft) / stats.totalMass)
+
 	local equipItems = {}
 	for i = 1,#Constants.EquipType do
 		local type = Constants.EquipType[i]
@@ -57,9 +68,9 @@ local shipInfo = function (args)
 			:SetColumn(0, {
 				ui:Table():AddRows({
 					ui:Table():SetColumnSpacing(10):AddRows({
-						{ t("HYPERDRIVE")..":", EquipDef[hyperdrive].name },
+						{ t("Hyperdrive")..":", EquipDef[hyperdrive].name },
 						{
-							t("HYPERSPACE_RANGE")..":",
+							t("Hyperspace range")..":",
 							string.interp(
 								t("{range} light years ({maxRange} max)"), {
 									range    = string.format("%.1f",stats.hyperspaceRange),
@@ -69,13 +80,18 @@ local shipInfo = function (args)
 						},
 						"",
 						{ t("Weight empty:"),      string.format("%dt", stats.totalMass - stats.usedCapacity) },
-						{ t("CAPACITY_USED")..":", string.format("%dt (%dt "..t("free")..")", stats.usedCapacity,  stats.freeCapacity) },
-						{ t("FUEL_WEIGHT")..":",   string.format("%dt (%dt "..t("max")..")", math.floor(Game.player.fuel/100*stats.maxFuelTankMass + 0.5), stats.maxFuelTankMass ) },
-						{ t("TOTAL_WEIGHT")..":",  string.format("%dt", math.floor(stats.totalMass+Game.player.fuel/100*stats.maxFuelTankMass + 0.5) ) },
+						{ t("Capacity used")..":", string.format("%dt (%dt "..t("free")..")", stats.usedCapacity,  stats.freeCapacity) },
+						{ t("FUEL_WEIGHT")..":",   string.format("%dt (%dt "..t("max")..")", stats.fuelMassLeft, stats.maxFuelTankMass ) },
+						{ t("All-up weight")..":",  string.format("%dt", mass_with_fuel ) },
 						"",
-						{ t("FRONT_WEAPON")..":", EquipDef[frontWeapon].name },
-						{ t("REAR_WEAPON")..":",  EquipDef[rearWeapon].name },
-						{ t("FUEL")..":",         string.format("%d%%", Game.player.fuel) },
+						{ t("Front weapon")..":", EquipDef[frontWeapon].name },
+						{ t("Rear weapon")..":",  EquipDef[rearWeapon].name },
+						{ t("FUEL")..":",         string.format("%d%%", Game.player.fuel)},
+						{ t("deltaV")..":",       string.format("%d km/s", deltav / 1000)},
+						"",
+						{ t("Forward Acceleration")..":",  string.format("%.2f m/s² (%.1f G)", fwd_acc, fwd_acc / 9.81) },
+						{ t("Backward Acceleration")..":", string.format("%.2f m/s² (%.1f G)", bwd_acc, bwd_acc / 9.81) },
+						{ t("Up Acceleration")..":",       string.format("%.2f m/s² (%.1f G)", up_acc, up_acc / 9.81) },
 						"",
 						{ t("Minimum crew")..":", ShipDef[Game.player.shipId].minCrew },
 						{ t("Crew cabins")..":",  ShipDef[Game.player.shipId].maxCrew },

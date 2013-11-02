@@ -51,8 +51,6 @@ void Container::AddWidget(Widget *widget)
 	widget->Attach(this);
 	m_widgets.push_back(RefCountedPtr<Widget>(widget));
 
-	widget->SetLayer(GetLayer());
-
 	GetContext()->RequestLayout();
 }
 
@@ -83,13 +81,6 @@ void Container::RemoveAllWidgets()
 	GetContext()->RequestLayout();
 }
 
-void Container::SetLayer(Layer *layer)
-{
-	Widget::SetLayer(layer);
-	for (std::vector< RefCountedPtr<Widget> >::iterator i = m_widgets.begin(); i != m_widgets.end(); ++i)
-		(*i)->SetLayer(layer);
-}
-
 void Container::Disable()
 {
 	DisableChildren();
@@ -102,13 +93,27 @@ void Container::Enable()
 	Widget::Enable();
 }
 
+void Container::NotifyVisible(bool visible)
+{
+	if (m_visible != visible) {
+		m_visible = visible;
+		if (m_visible) { HandleVisible(); } else { HandleInvisible(); }
+
+		for (std::vector< RefCountedPtr<Widget> >::iterator i = m_widgets.begin(); i != m_widgets.end(); ++i) {
+			Widget *w = (*i).Get();
+			w->NotifyVisible(visible);
+		}
+	}
+}
+
 void Container::DisableChildren()
 {
 	for (std::vector< RefCountedPtr<Widget> >::iterator i = m_widgets.begin(); i != m_widgets.end(); ++i) {
 		Widget *w = (*i).Get();
 		w->SetDisabled(true);
-		Container *c = dynamic_cast<Container*>(w);
-		if (c) c->DisableChildren();
+		if (w->IsContainer()) {
+			static_cast<Container*>(w)->DisableChildren();
+		}
 	}
 }
 
@@ -117,8 +122,9 @@ void Container::EnableChildren()
 	for (std::vector< RefCountedPtr<Widget> >::iterator i = m_widgets.begin(); i != m_widgets.end(); ++i) {
 		Widget *w = (*i).Get();
 		w->SetDisabled(false);
-		Container *c = dynamic_cast<Container*>(w);
-		if (c) c->EnableChildren();
+		if (w->IsContainer()) {
+			static_cast<Container*>(w)->EnableChildren();
+		}
 	}
 }
 

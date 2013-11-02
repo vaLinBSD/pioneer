@@ -54,8 +54,6 @@ protected:
 
 	void SetWidgetDimensions(Widget *widget, const Point &position, const Point &size);
 
-	virtual void SetLayer(Layer *layer);
-
 private:
 
 	// EventDispatcher will call here on layout change to get the shortcuts
@@ -63,6 +61,7 @@ private:
 	friend class EventDispatcher;
 	void CollectShortcuts(std::map<KeySym,Widget*> &shortcuts);
 
+	virtual void NotifyVisible(bool visible);
 
 	void EnableChildren();
 	void DisableChildren();

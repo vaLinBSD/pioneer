@@ -7,12 +7,12 @@
 #include "CargoBody.h"
 #include "CityOnPlanet.h"
 #include "DeathView.h"
+#include "FaceGenManager.h"
 #include "Factions.h"
 #include "FileSystem.h"
 #include "Frame.h"
 #include "GalacticView.h"
 #include "Game.h"
-#include "GameMenuView.h"
 #include "GeoSphere.h"
 #include "Intro.h"
 #include "Lang.h"
@@ -63,6 +63,7 @@
 #include "Tombstone.h"
 #include "UIView.h"
 #include "WorldView.h"
+#include "KeyBindings.h"
 #include "EnumStrings.h"
 #include "galaxy/CustomSystem.h"
 #include "galaxy/Galaxy.h"
@@ -107,7 +108,7 @@ SpaceStationView *Pi::spaceStationView;
 UIView *Pi::infoView;
 SectorView *Pi::sectorView;
 GalacticView *Pi::galacticView;
-GameMenuView *Pi::gameMenuView;
+UIView *Pi::settingsView;
 SystemView *Pi::systemView;
 SystemInfoView *Pi::systemInfoView;
 ShipCpanel *Pi::cpan;
@@ -138,7 +139,7 @@ ObjectViewerView *Pi::objectViewerView;
 #endif
 
 Sound::MusicPlayer Pi::musicPlayer;
-ScopedPtr<JobQueue> Pi::jobQueue;
+std::unique_ptr<JobQueue> Pi::jobQueue;
 
 static void draw_progress(UI::Gauge *gauge, UI::Label *label, float progress)
 {
@@ -320,7 +321,7 @@ void Pi::Init()
 	const int numCores = OS::GetNumCores();
 	assert(numCores > 0);
 	if (numThreads == 0) numThreads = std::max(Uint32(numCores) - 1, 1U);
-	jobQueue.Reset(new JobQueue(numThreads));
+	jobQueue.reset(new JobQueue(numThreads));
 	printf("started %d worker threads\n", numThreads);
 
 	// XXX early, Lua init needs it
@@ -359,6 +360,9 @@ void Pi::Init()
 
 	Galaxy::Init();
 	draw_progress(gauge, label, 0.2f);
+
+	FaceGenManager::Init();
+	draw_progress(gauge, label, 0.25f);
 
 	Faction::Init();
 	draw_progress(gauge, label, 0.3f);
@@ -486,7 +490,7 @@ void Pi::Init()
 
 			double xsize = 0.0, ysize = 0.0, zsize = 0.0, fakevol = 0.0, rescale = 0.0, brad = 0.0;
 			if (model) {
-				ScopedPtr<SceneGraph::Model> inst(model->MakeInstance());
+				std::unique_ptr<SceneGraph::Model> inst(model->MakeInstance());
 				model->CreateCollisionMesh();
 				Aabb aabb = model->GetCollisionMesh()->GetAabb();
 				xsize = aabb.max.x-aabb.min.x;
@@ -516,9 +520,6 @@ void Pi::Init()
 
 	luaConsole = new LuaConsole(10);
 	KeyBindings::toggleLuaConsole.onPress.connect(sigc::ptr_fun(&Pi::ToggleLuaConsole));
-
-	gameMenuView = new GameMenuView();
-	config->Save();
 }
 
 bool Pi::IsConsoleActive()
@@ -547,7 +548,6 @@ void Pi::Quit()
 {
 	Projectile::FreeModel();
 	delete Pi::intro;
-	delete Pi::gameMenuView;
 	delete Pi::luaConsole;
 	NavLights::Uninit();
 	Sfx::Uninit();
@@ -557,6 +557,7 @@ void Pi::Quit()
 	GeoSphere::Uninit();
 	Galaxy::Uninit();
 	Faction::Uninit();
+	FaceGenManager::Destroy();
 	CustomSystem::Uninit();
 	Graphics::Uninit();
 	Pi::ui.Reset(0);
@@ -568,7 +569,7 @@ void Pi::Quit()
 	StarSystem::ShrinkCache();
 	SDL_Quit();
 	FileSystem::Uninit();
-	jobQueue.Reset();
+	jobQueue.reset();
 	exit(0);
 }
 
@@ -615,9 +616,9 @@ void Pi::HandleEvents()
 					if (Pi::game) {
 						// only accessible once game started
 						if (currentView != 0) {
-							if (currentView != gameMenuView) {
+							if (currentView != settingsView) {
 								Pi::game->SetTimeAccel(Game::TIMEACCEL_PAUSED);
-								SetView(gameMenuView);
+								SetView(settingsView);
 							}
 							else {
 								Pi::game->RequestTimeAccel(Game::TIMEACCEL_1X);
@@ -798,7 +799,7 @@ void Pi::HandleEvents()
 
 void Pi::TombStoneLoop()
 {
-	ScopedPtr<Tombstone> tombstone(new Tombstone(Pi::renderer, Graphics::GetScreenWidth(), Graphics::GetScreenHeight()));
+	std::unique_ptr<Tombstone> tombstone(new Tombstone(Pi::renderer, Graphics::GetScreenWidth(), Graphics::GetScreenHeight()));
 	Uint32 last_time = SDL_GetTicks();
 	float _time = 0;
 	do {
@@ -1073,8 +1074,7 @@ void Pi::MainLoop()
 
 		Pi::renderer->SwapBuffers();
 
-		// game exit or failed load from GameMenuView will have cleared
-		// Pi::game. we can't continue.
+		// game exit will have cleared Pi::game. we can't continue.
 		if (!Pi::game)
 			return;
 
@@ -1238,13 +1238,11 @@ void Pi::SetMouseGrab(bool on)
 	if (!doingMouseGrab && on) {
 		SDL_ShowCursor(0);
 		Pi::renderer->GetWindow()->SetGrab(true);
-//		SDL_SetRelativeMouseMode(true);
 		doingMouseGrab = true;
 	}
 	else if(doingMouseGrab && !on) {
 		SDL_ShowCursor(1);
 		Pi::renderer->GetWindow()->SetGrab(false);
-//		SDL_SetRelativeMouseMode(false);
 		doingMouseGrab = false;
 	}
 }
