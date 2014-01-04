@@ -1,4 +1,4 @@
--- Copyright © 2008-2013 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2014 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 --
@@ -964,9 +964,9 @@ Character = {
 --
 -- Show player their own combat rating as a UI message
 --
--- > t = Translate:GetTranslator()
+-- > l = Lang.GetResource("ui-core")
 -- > UI.Message(('Your combat rating is {rating}'):interp({
--- >     rating = t(Character.persistent.player:GetCombatRating()),
+-- >     rating = l[Character.persistent.player:GetCombatRating(]),
 -- > }))
 --
 -- Availability:

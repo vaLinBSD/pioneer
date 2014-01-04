@@ -1,4 +1,4 @@
-// Copyright © 2008-2013 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2014 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _PI_H
@@ -29,7 +29,6 @@ class SectorView;
 class Ship;
 class ShipCpanel;
 class SpaceStation;
-class SpaceStationView;
 class StarSystem;
 class SystemInfoView;
 class SystemView;
@@ -88,6 +87,8 @@ public:
     static bool IsMouseYInvert() { return mouseYInvert; }
 	static bool IsNavTunnelDisplayed() { return navTunnelDisplayed; }
 	static void SetNavTunnelDisplayed(bool state) { navTunnelDisplayed = state; }
+	static bool AreSpeedLinesDisplayed() { return speedLinesDisplayed; }
+	static void SetSpeedLinesDisplayed(bool state) { speedLinesDisplayed = state; }
 	static int MouseButtonState(int button) { return mouseButton[button]; }
 	/// Get the default speed modifier to apply to movement (scrolling, zooming...), depending on the "shift" keys.
 	/// This is a default value only, centralized here to promote uniform user expericience.
@@ -104,6 +105,11 @@ public:
 	static void Message(const std::string &message, const std::string &from = "", enum MsgLevel level = MSG_NORMAL);
 	static std::string GetSaveDir();
 	static SceneGraph::Model *FindModel(const std::string&, bool allowPlaceholder = true);
+
+	static void CreateRenderTarget(const Uint16 width, const Uint16 height);
+	static void DrawRenderTarget();
+	static void BeginRenderTarget();
+	static void EndRenderTarget();
 
 	static const char SAVE_DIR_NAME[];
 
@@ -133,6 +139,12 @@ public:
 #if WITH_DEVKEYS
 	static bool showDebugInfo;
 #endif
+#if PIONEER_PROFILER
+	static std::string profilerPath;
+	static bool doProfileSlow;
+	static bool doProfileOne;
+#endif
+
 	static Player *player;
 	static SectorView *sectorView;
 	static GalacticView *galacticView;
@@ -141,7 +153,7 @@ public:
 	static SystemView *systemView;
 	static WorldView *worldView;
 	static DeathView *deathView;
-	static SpaceStationView *spaceStationView;
+	static UIView *spaceStationView;
 	static UIView *infoView;
 	static LuaConsole *luaConsole;
 	static ShipCpanel *cpan;
@@ -204,8 +216,13 @@ private:
 	static Sound::MusicPlayer musicPlayer;
 
 	static bool navTunnelDisplayed;
+	static bool speedLinesDisplayed;
 
 	static Gui::Fixed *menu;
+
+	static Graphics::RenderTarget *renderTarget;
+	static RefCountedPtr<Graphics::Texture> renderTexture;
+	static std::unique_ptr<Graphics::Drawables::TexturedQuad> renderQuad;
 };
 
 #endif /* _PI_H */
