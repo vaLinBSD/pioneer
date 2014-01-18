@@ -25,6 +25,12 @@ class CargoBody;
 class Missile;
 namespace Graphics { class Renderer; }
 
+struct HeatGradientParameters_t {
+	matrix3x3f heatingMatrix;
+	vector3f heatingNormal; // normalised
+	float heatingAmount; // 0.0 to 1.0 used for `u` component of heatGradient texture
+};
+
 struct shipstats_t {
 	int used_capacity;
 	int used_cargo;
@@ -103,7 +109,7 @@ public:
 
 	virtual void NotifyRemoved(const Body* const removedBody);
 	virtual bool OnCollision(Object *o, Uint32 flags, double relVel);
-	virtual bool OnDamage(Object *attacker, float kgDamage);
+	virtual bool OnDamage(Object *attacker, float kgDamage, const CollisionContact& contactData);
 
 	enum FlightState { // <enum scope='Ship' name=ShipFlightState public>
 		FLYING,     // open flight (includes autopilot)
@@ -135,6 +141,7 @@ public:
 		HYPERJUMP_SAFETY_LOCKOUT
 	};
 
+	HyperjumpStatus GetHyperspaceDetails(const SystemPath &src, const SystemPath &dest, int &outFuelRequired, double &outDurationSecs);
 	HyperjumpStatus GetHyperspaceDetails(const SystemPath &dest, int &outFuelRequired, double &outDurationSecs);
 	HyperjumpStatus CheckHyperspaceTo(const SystemPath &dest, int &outFuelRequired, double &outDurationSecs);
 	HyperjumpStatus CheckHyperspaceTo(const SystemPath &dest) {
@@ -290,9 +297,12 @@ private:
 	void OnEquipmentChange(Equip::Type e);
 	void EnterHyperspace();
 	void InitGun(const char *tag, int num);
+	void InitMaterials();
 
 	bool m_invulnerable;
 
+	static const float DEFAULT_SHIELD_COOLDOWN_TIME;
+	float m_shieldCooldown;
 	shipstats_t m_stats;
 	const ShipType *m_type;
 	SceneGraph::ModelSkin m_skin;
@@ -329,6 +339,8 @@ private:
 
 	SceneGraph::Animation *m_landingGearAnimation;
 	std::unique_ptr<NavLights> m_navLights;
+
+	static HeatGradientParameters_t s_heatGradientParams;
 };
 
 

@@ -39,6 +39,7 @@
 #include "ModelCache.h"
 #include "ModManager.h"
 #include "NavLights.h"
+#include "Shields.h"
 #include "ObjectViewerView.h"
 #include "OS.h"
 #include "Planet.h"
@@ -160,7 +161,7 @@ void Pi::CreateRenderTarget(const Uint16 width, const Uint16 height) {
 		In that case, leave the color format to NONE so the initial texture is not created, then use SetColorTexture to attach your own.
 	*/
 	Graphics::TextureDescriptor texDesc(
-		Graphics::TEXTURE_RGB_888,
+		Graphics::TEXTURE_RGBA_8888,
 		vector2f(width, height),
 		Graphics::LINEAR_CLAMP, false, false, 0);
 	Pi::renderTexture.Reset(Pi::renderer->CreateTexture(texDesc));
@@ -246,6 +247,7 @@ static void LuaInit()
 	LuaObject<Player>::RegisterClass();
 	LuaObject<Missile>::RegisterClass();
 	LuaObject<CargoBody>::RegisterClass();
+	LuaObject<ModelBody>::RegisterClass();
 
 	LuaObject<StarSystem>::RegisterClass();
 	LuaObject<SystemPath>::RegisterClass();
@@ -459,6 +461,7 @@ void Pi::Init()
 	draw_progress(gauge, label, 0.4f);
 
 	modelCache = new ModelCache(Pi::renderer);
+	Shields::Init(Pi::renderer);
 	draw_progress(gauge, label, 0.5f);
 
 //unsigned int control_word;
@@ -638,6 +641,7 @@ void Pi::Quit()
 	delete Pi::intro;
 	delete Pi::luaConsole;
 	NavLights::Uninit();
+	Shields::Uninit();
 	Sfx::Uninit();
 	Sound::Uninit();
 	SpaceStation::Uninit();
@@ -1018,7 +1022,7 @@ void Pi::Start()
 		last_time = SDL_GetTicks();
 	}
 
-	ui->GetTopLayer()->RemoveInnerWidget();
+	ui->DropAllLayers();
 	ui->Layout(); // UI does important things on layout, like updating keyboard shortcuts
 
 	delete Pi::intro; Pi::intro = 0;
