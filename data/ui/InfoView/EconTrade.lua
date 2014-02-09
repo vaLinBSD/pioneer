@@ -52,6 +52,9 @@ local econTrade = function ()
 							updateCargoListWidget()
 							cargoListWidget:SetInnerWidget(updateCargoListWidget())
 						end)
+						if Game.player.flightState ~= "FLYING" then
+							jettisonButton.widget:Disable()
+						end
 						table.insert(cargoJettisonColumn, jettisonButton.widget)
 					end
 				end
@@ -100,7 +103,9 @@ local econTrade = function ()
 
 	local refuelButtonRefresh = function ()
 		if Game.player.fuel == 100 or Game.player:GetEquipCount('CARGO', 'WATER') == 0 then refuelButton.widget:Disable() end
-		fuelGauge:SetValue(Game.player.fuel/100)
+		local fuel_percent = Game.player.fuel/100
+		fuelGauge.gauge:SetValue(fuel_percent)
+		fuelGauge.label:SetValue(fuel_percent)
 	end
 	refuelButtonRefresh()
 

@@ -19,6 +19,8 @@
 #include "StringF.h"
 #include <SDL_stdinc.h>
 
+StarSystemCache::SystemCacheMap StarSystemCache::s_cachedSystems;
+
 static const double CELSIUS	= 273.15;
 //#define DEBUG_DUMP
 
@@ -514,7 +516,7 @@ SystemBody::BodySuperType SystemBody::GetSuperType() const
 		case TYPE_GRAVPOINT:
              return SUPERTYPE_NONE;
         default:
-             fprintf( stderr, "Warning: Invalid SuperBody Type found.\n");
+             Output("Warning: Invalid SuperBody Type found.\n");
              return SUPERTYPE_NONE;
 	}
 }
@@ -650,7 +652,7 @@ std::string SystemBody::GetAstroDescription() const
 		return Lang::STARPORT;
 	case TYPE_GRAVPOINT:
     default:
-        fprintf( stderr, "Warning: Invalid Astro Body Description found.\n");
+        Output("Warning: Invalid Astro Body Description found.\n");
         return Lang::UNKNOWN;
 	}
 }
@@ -778,7 +780,7 @@ const char *SystemBody::GetIcon() const
 	case TYPE_GRAVPOINT:
 	case TYPE_STARPORT_SURFACE:
     default:
-        fprintf( stderr, "Warning: Invalid body icon.\n");
+        Output("Warning: Invalid body icon.\n");
 		return 0;
 	}
 }
@@ -1033,6 +1035,13 @@ void StarSystem::GenerateFromCustom(const CustomSystem *customSys, Random &rand)
 
 	int humanInfestedness = 0;
 	CustomGetKidsOf(rootBody.Get(), csbody->children, &humanInfestedness, rand);
+	int i = 0;
+	m_stars.resize(m_numStars);
+	for (RefCountedPtr<SystemBody> b : m_bodies) {
+		if (b->GetSuperType() == SystemBody::SUPERTYPE_STAR)
+			m_stars[i++] = b.Get();
+	}
+	assert(i == m_numStars);
 	Populate(false);
 
 	// an example re-export of custom system, can be removed during the merge
@@ -1263,8 +1272,8 @@ void SystemBody::PickAtmosphere()
 				m_atmosColor = Color(0);
 			}
 			m_atmosDensity = m_volatileGas.ToDouble();
-			//printf("| Atmosphere :\n|      red   : [%f] \n|      green : [%f] \n|      blue  : [%f] \n", r, g, b);
-			//printf("-------------------------------\n");
+			//Output("| Atmosphere :\n|      red   : [%f] \n|      green : [%f] \n|      blue  : [%f] \n", r, g, b);
+			//Output("-------------------------------\n");
 			break;
 		/*default:
 			m_atmosColor = Color(0.6f, 0.6f, 0.6f, 1.0f);
@@ -1400,11 +1409,11 @@ StarSystem::StarSystem(const SystemPath &path) : m_path(path)
 	assert(path.IsSystemPath());
 	memset(m_tradeLevel, 0, sizeof(m_tradeLevel));
 
-	const Sector &s = *Sector::cache.GetCached(m_path);
-	assert(m_path.systemIndex >= 0 && m_path.systemIndex < s.m_systems.size());
+	RefCountedPtr<const Sector> s = Sector::cache.GetCached(m_path);
+	assert(m_path.systemIndex >= 0 && m_path.systemIndex < s->m_systems.size());
 
-	m_seed    = s.m_systems[m_path.systemIndex].seed;
-	m_name    = s.m_systems[m_path.systemIndex].name;
+	m_seed    = s->m_systems[m_path.systemIndex].seed;
+	m_name    = s->m_systems[m_path.systemIndex].name;
 	m_faction = Faction::GetNearestFaction(s, m_path.systemIndex);
 
 	Uint32 _init[6] = { m_path.systemIndex, Uint32(m_path.sectorX), Uint32(m_path.sectorY), Uint32(m_path.sectorZ), UNIVERSE_SEED, Uint32(m_seed) };
@@ -1419,16 +1428,16 @@ StarSystem::StarSystem(const SystemPath &path) : m_path(path)
 	m_unexplored = !(((dist <= 90) && ( dist <= 65 || rand.Int32(dist) <= 40)) || Faction::IsHomeSystem(path));
 
 	m_isCustom = m_hasCustomBodies = false;
-	if (s.m_systems[m_path.systemIndex].customSys) {
+	if (s->m_systems[m_path.systemIndex].customSys) {
 		m_isCustom = true;
-		const CustomSystem *custom = s.m_systems[m_path.systemIndex].customSys;
+		const CustomSystem *custom = s->m_systems[m_path.systemIndex].customSys;
 		m_numStars = custom->numStars;
 		if (custom->shortDesc.length() > 0) m_shortDesc = custom->shortDesc;
 		if (custom->longDesc.length() > 0) m_longDesc = custom->longDesc;
 		if (!custom->want_rand_explored) m_unexplored = !custom->explored;
 		if (!custom->IsRandom()) {
 			m_hasCustomBodies = true;
-			GenerateFromCustom(s.m_systems[m_path.systemIndex].customSys, rand);
+			GenerateFromCustom(s->m_systems[m_path.systemIndex].customSys, rand);
 			return;
 		}
 	}
@@ -1436,14 +1445,13 @@ StarSystem::StarSystem(const SystemPath &path) : m_path(path)
 	SystemBody *star[4];
 	SystemBody *centGrav1(0), *centGrav2(0);
 
-	const int numStars = s.m_systems[m_path.systemIndex].numStars;
+	const int numStars = s->m_systems[m_path.systemIndex].numStars;
 	assert((numStars >= 1) && (numStars <= 4));
-
 	if (numStars == 1) {
-		SystemBody::BodyType type = s.m_systems[m_path.systemIndex].starType[0];
+		SystemBody::BodyType type = s->m_systems[m_path.systemIndex].starType[0];
 		star[0] = NewBody();
 		star[0]->parent = 0;
-		star[0]->name = s.m_systems[m_path.systemIndex].name;
+		star[0]->name = s->m_systems[m_path.systemIndex].name;
 		star[0]->orbMin = fixed(0);
 		star[0]->orbMax = fixed(0);
 
@@ -1454,19 +1462,19 @@ StarSystem::StarSystem(const SystemPath &path) : m_path(path)
 		centGrav1 = NewBody();
 		centGrav1->type = SystemBody::TYPE_GRAVPOINT;
 		centGrav1->parent = 0;
-		centGrav1->name = s.m_systems[m_path.systemIndex].name+" A,B";
+		centGrav1->name = s->m_systems[m_path.systemIndex].name+" A,B";
 		rootBody.Reset(centGrav1);
 
-		SystemBody::BodyType type = s.m_systems[m_path.systemIndex].starType[0];
+		SystemBody::BodyType type = s->m_systems[m_path.systemIndex].starType[0];
 		star[0] = NewBody();
-		star[0]->name = s.m_systems[m_path.systemIndex].name+" A";
+		star[0]->name = s->m_systems[m_path.systemIndex].name+" A";
 		star[0]->parent = centGrav1;
 		MakeStarOfType(star[0], type, rand);
 
 		star[1] = NewBody();
-		star[1]->name = s.m_systems[m_path.systemIndex].name+" B";
+		star[1]->name = s->m_systems[m_path.systemIndex].name+" B";
 		star[1]->parent = centGrav1;
-		MakeStarOfTypeLighterThan(star[1], s.m_systems[m_path.systemIndex].starType[1],
+		MakeStarOfTypeLighterThan(star[1], s->m_systems[m_path.systemIndex].starType[1],
 				star[0]->mass, rand);
 
 		centGrav1->mass = star[0]->mass + star[1]->mass;
@@ -1487,29 +1495,29 @@ try_that_again_guvnah:
 			// 3rd and maybe 4th star
 			if (numStars == 3) {
 				star[2] = NewBody();
-				star[2]->name = s.m_systems[m_path.systemIndex].name+" C";
+				star[2]->name = s->m_systems[m_path.systemIndex].name+" C";
 				star[2]->orbMin = 0;
 				star[2]->orbMax = 0;
-				MakeStarOfTypeLighterThan(star[2], s.m_systems[m_path.systemIndex].starType[2],
+				MakeStarOfTypeLighterThan(star[2], s->m_systems[m_path.systemIndex].starType[2],
 					star[0]->mass, rand);
 				centGrav2 = star[2];
 				m_numStars = 3;
 			} else {
 				centGrav2 = NewBody();
 				centGrav2->type = SystemBody::TYPE_GRAVPOINT;
-				centGrav2->name = s.m_systems[m_path.systemIndex].name+" C,D";
+				centGrav2->name = s->m_systems[m_path.systemIndex].name+" C,D";
 				centGrav2->orbMax = 0;
 
 				star[2] = NewBody();
-				star[2]->name = s.m_systems[m_path.systemIndex].name+" C";
+				star[2]->name = s->m_systems[m_path.systemIndex].name+" C";
 				star[2]->parent = centGrav2;
-				MakeStarOfTypeLighterThan(star[2], s.m_systems[m_path.systemIndex].starType[2],
+				MakeStarOfTypeLighterThan(star[2], s->m_systems[m_path.systemIndex].starType[2],
 					star[0]->mass, rand);
 
 				star[3] = NewBody();
-				star[3]->name = s.m_systems[m_path.systemIndex].name+" D";
+				star[3]->name = s->m_systems[m_path.systemIndex].name+" D";
 				star[3]->parent = centGrav2;
-				MakeStarOfTypeLighterThan(star[3], s.m_systems[m_path.systemIndex].starType[3],
+				MakeStarOfTypeLighterThan(star[3], s->m_systems[m_path.systemIndex].starType[3],
 					star[2]->mass, rand);
 
 				// Separate stars by 0.2 radii for each, so that their planets don't bump into the other star
@@ -1523,7 +1531,7 @@ try_that_again_guvnah:
 			SystemBody *superCentGrav = NewBody();
 			superCentGrav->type = SystemBody::TYPE_GRAVPOINT;
 			superCentGrav->parent = 0;
-			superCentGrav->name = s.m_systems[m_path.systemIndex].name;
+			superCentGrav->name = s->m_systems[m_path.systemIndex].name;
 			centGrav1->parent = superCentGrav;
 			centGrav2->parent = superCentGrav;
 			rootBody.Reset(superCentGrav);
@@ -1539,7 +1547,11 @@ try_that_again_guvnah:
 	// XXX except this does not reflect the actual mining happening in this system
 	m_metallicity = starMetallicities[rootBody->type];
 
-	for (int i=0; i<m_numStars; i++) MakePlanetsAround(star[i], rand);
+	m_stars.resize(m_numStars);
+	for (int i=0; i<m_numStars; i++) {
+		m_stars[i] = star[i];
+		MakePlanetsAround(star[i], rand);
+	}
 
 	if (m_numStars > 1) MakePlanetsAround(centGrav1, rand);
 	if (m_numStars == 4) MakePlanetsAround(centGrav2, rand);
@@ -1610,7 +1622,7 @@ void StarSystem::Dump()
 				1.0, 1.0, 1.0);
 	}
 	fclose(f);
-	printf("Junk dumped to starsystem.dump\n");
+	Output("Junk dumped to starsystem.dump\n");
 }
 #endif /* DEBUG_DUMP */
 
@@ -1728,7 +1740,7 @@ void StarSystem::MakePlanetsAround(SystemBody *primary, Random &rand)
 
 	//fixed discDensity = 20*rand.NFixed(4);
 
-	//printf("Around %s: Range %f -> %f AU\n", primary->name.c_str(), discMin.ToDouble(), discMax.ToDouble());
+	//Output("Around %s: Range %f -> %f AU\n", primary->name.c_str(), discMin.ToDouble(), discMax.ToDouble());
 
 	fixed initialJump = rand.NFixed(5);
 	fixed pos = (fixed(1,1) - initialJump)*discMin + (initialJump*discMax);
@@ -1749,7 +1761,7 @@ void StarSystem::MakePlanetsAround(SystemBody *primary, Random &rand)
 			mass *= rand.Fixed() * discDensity;
 		}
 		if (mass < 0) {// hack around overflow
-			fprintf(stderr, "WARNING: planetary mass has overflowed! (child of %s)\n", primary->name.c_str());
+			Output("WARNING: planetary mass has overflowed! (child of %s)\n", primary->name.c_str());
 			mass = fixed(Sint64(0x7fFFffFFffFFffFFull));
 		}
 		assert(mass >= 0);
@@ -1880,7 +1892,7 @@ void SystemBody::PickPlanetType(Random &rand)
 		invTidalLockTime /= radius;
 		invTidalLockTime /= (semiMajorAxis * semiMajorAxis)*MOON_TIDAL_LOCK;
 	}
-	//printf("tidal lock of %s: %.5f, a %.5f R %.4f mp %.3f ms %.3f\n", name.c_str(),
+	//Output("tidal lock of %s: %.5f, a %.5f R %.4f mp %.3f ms %.3f\n", name.c_str(),
 	//		invTidalLockTime.ToFloat(), semiMajorAxis.ToFloat(), radius.ToFloat(), parent->mass.ToFloat(), mass.ToFloat());
 
 	if(invTidalLockTime > 10) { // 10x faster than Moon, no chance not to be tidal-locked
@@ -1934,7 +1946,7 @@ void SystemBody::PickPlanetType(Random &rand)
 		// total atmosphere loss
 		if (rand.Fixed() > mass) amount_volatiles = fixed(0);
 
-		//printf("Amount volatiles: %f\n", amount_volatiles.ToFloat());
+		//Output("Amount volatiles: %f\n", amount_volatiles.ToFloat());
 		// fudge how much of the volatiles are in which state
 		greenhouse = fixed(0);
 		albedo = fixed(0);
@@ -1964,7 +1976,7 @@ void SystemBody::PickPlanetType(Random &rand)
 		const fixed proportion_ices = fixed(1,1) - (proportion_gas + proportion_liquid);
 		m_volatileIces = proportion_ices * amount_volatiles;
 
-		//printf("temp %dK, gas:liquid:ices %f:%f:%f\n", averageTemp, proportion_gas.ToFloat(),
+		//Output("temp %dK, gas:liquid:ices %f:%f:%f\n", averageTemp, proportion_gas.ToFloat(),
 		//		proportion_liquid.ToFloat(), proportion_ices.ToFloat());
 
 		if ((m_volatileLiquid > fixed(0)) &&
@@ -2058,7 +2070,7 @@ void StarSystem::Populate(bool addSpaceStations)
 	m_totalPop = fixed(0);
 	rootBody->PopulateStage1(this, m_totalPop);
 
-//	printf("Trading rates:\n");
+//	Output("Trading rates:\n");
 	// So now we have balances of trade of various commodities.
 	// Lets use black magic to turn these into percentage base price
 	// alterations
@@ -2075,9 +2087,9 @@ void StarSystem::Populate(bool addSpaceStations)
 //	for (int i=(int)Equip::FIRST_COMMODITY; i<=(int)Equip::LAST_COMMODITY; i++) {
 //		Equip::Type t = (Equip::Type)i;
 //		const EquipType &type = Equip::types[t];
-//		printf("%s: %d%%\n", type.name, m_tradeLevel[t]);
+//		Output("%s: %d%%\n", type.name, m_tradeLevel[t]);
 //	}
-//	printf("System total population %.3f billion\n", m_totalPop.ToFloat());
+//	Output("System total population %.3f billion\n", m_totalPop.ToFloat());
 	Polit::GetSysPolitStarSystem(this, m_totalPop, m_polit);
 
 	if (addSpaceStations) {
@@ -2218,7 +2230,7 @@ void SystemBody::PopulateStage1(StarSystem *system, fixed &outTotalPop)
 	// well, outdoor worlds should have way more people
 	m_population = fixed(1,10)*m_population + m_population*m_agricultural;
 
-//	printf("%s: pop %.3f billion\n", name.c_str(), m_population.ToFloat());
+//	Output("%s: pop %.3f billion\n", name.c_str(), m_population.ToFloat());
 
 	outTotalPop += m_population;
 }
@@ -2298,10 +2310,24 @@ void SystemBody::PopulateAddStations(StarSystem *system)
 		pop -= rand.Fixed();
 		if (pop > 0) {
 			SystemBody *sp2 = system->NewBody();
-			SystemPath path2 = sp2->path;
-			*sp2 = *sp;
-			sp2->path = path2;
+			sp2->type = sp->type;
+			sp2->seed = sp->seed;
+			sp2->tmp = sp->tmp;
+			sp2->parent = sp->parent;
+			sp2->rotationPeriod = sp->rotationPeriod;
+			sp2->averageTemp = sp->averageTemp;
+			sp2->mass = sp->mass;
+			sp2->semiMajorAxis = sp->semiMajorAxis;
+			sp2->eccentricity = sp->eccentricity;
+			sp2->axialTilt = sp->axialTilt;
+
+			sp2->orbit = sp->orbit;
 			sp2->orbit.SetPlane(matrix3x3d::RotateZ(M_PI));
+
+			sp2->inclination = sp->inclination;
+			sp2->orbMin = sp->orbMin;
+			sp2->orbMax = sp->orbMax;
+
 			sp2->name = gen_unique_station_name(sp, system, namerand);
 			children.insert(children.begin(), sp2);
 			system->m_spaceStations.push_back(sp2);
@@ -2366,47 +2392,9 @@ RefCountedPtr<StarSystem> StarSystem::Unserialize(Serializer::Reader &rd)
 		int sec_y = rd.Int32();
 		int sec_z = rd.Int32();
 		int sys_idx = rd.Int32();
-		return StarSystem::GetCached(SystemPath(sec_x, sec_y, sec_z, sys_idx));
+		return StarSystemCache::GetCached(SystemPath(sec_x, sec_y, sec_z, sys_idx));
 	} else {
 		return RefCountedPtr<StarSystem>(0);
-	}
-}
-
-typedef std::map<SystemPath,StarSystem*> SystemCacheMap;
-static SystemCacheMap s_cachedSystems;
-
-RefCountedPtr<StarSystem> StarSystem::GetCached(const SystemPath &path)
-{
-	PROFILE_SCOPED()
-	SystemPath sysPath(path.SystemOnly());
-
-	StarSystem *s = 0;
-	std::pair<SystemCacheMap::iterator, bool>
-		ret = s_cachedSystems.insert(SystemCacheMap::value_type(sysPath, static_cast<StarSystem*>(0)));
-	if (ret.second) {
-		s = new StarSystem(sysPath);
-		ret.first->second = s;
-		s->IncRefCount(); // the cache owns one reference
-	} else {
-		s = ret.first->second;
-	}
-	return RefCountedPtr<StarSystem>(s);
-}
-
-void StarSystem::ShrinkCache()
-{
-	PROFILE_SCOPED()
-	std::map<SystemPath,StarSystem*>::iterator i = s_cachedSystems.begin();
-	while (i != s_cachedSystems.end()) {
-		StarSystem *s = (*i).second;
-		assert(s->GetRefCount() >= 1); // sanity check
-		// if the cache is the only owner, then delete it
-		if (s->GetRefCount() == 1) {
-			delete s;
-			s_cachedSystems.erase(i++);
-		} else {
-			i++;
-		}
 	}
 }
 
@@ -2552,14 +2540,75 @@ void StarSystem::ExportToLua(const char *filename) {
 
 	fprintf(f, "system:bodies(%s)\n\n", ExportBodyToLua(f, rootBody.Get()).c_str());
 
-	const Sector &sec = *Sector::cache.GetCached(GetPath());
+	RefCountedPtr<const Sector> sec = Sector::cache.GetCached(GetPath());
 	SystemPath pa = GetPath();
 
 	fprintf(f, "system:add_to_sector(%d,%d,%d,v(%.4f,%.4f,%.4f))\n",
 			pa.sectorX, pa.sectorY, pa.sectorZ,
-			sec.m_systems[pa.systemIndex].p.x/Sector::SIZE,
-			sec.m_systems[pa.systemIndex].p.y/Sector::SIZE,
-			sec.m_systems[pa.systemIndex].p.z/Sector::SIZE);
+			sec->m_systems[pa.systemIndex].p.x/Sector::SIZE,
+			sec->m_systems[pa.systemIndex].p.y/Sector::SIZE,
+			sec->m_systems[pa.systemIndex].p.z/Sector::SIZE);
 
 	fclose(f);
+}
+
+RefCountedPtr<StarSystem> StarSystemCache::GetCached(const SystemPath &path)
+{
+	PROFILE_SCOPED()
+	SystemPath sysPath(path.SystemOnly());
+
+	StarSystem *s = 0;
+	std::pair<SystemCacheMap::iterator, bool>
+		ret = s_cachedSystems.insert(SystemCacheMap::value_type(sysPath, static_cast<StarSystem*>(0)));
+	if (ret.second) {
+		s = new StarSystem(sysPath);
+		ret.first->second = s;
+		s->IncRefCount(); // the cache owns one reference
+	} else {
+		s = ret.first->second;
+	}
+	return RefCountedPtr<StarSystem>(s);
+}
+
+static bool WithinBox(const SystemPath &here, const int Xmin, const int Xmax, const int Ymin, const int Ymax, const int Zmin, const int Zmax) {
+	PROFILE_SCOPED()
+	if(here.sectorX >= Xmin && here.sectorX <= Xmax) {
+		if(here.sectorY >= Ymin && here.sectorY <= Ymax) {
+			if(here.sectorZ >= Zmin && here.sectorZ <= Zmax) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+void StarSystemCache::ShrinkCache(const SystemPath &here, const bool clear/*=false*/)
+{
+	PROFILE_SCOPED()
+	// we're going to use these to determine if our StarSystems are within a range that we'll keep for later use
+	static const int survivorRadius = 30;	// 3 times the distance used by the SectorCache population method.
+
+	// min/max box limits
+	const int xmin = here.sectorX-survivorRadius;
+	const int xmax = here.sectorX+survivorRadius;
+	const int ymin = here.sectorY-survivorRadius;
+	const int ymax = here.sectorY+survivorRadius;
+	const int zmin = here.sectorZ-survivorRadius;
+	const int zmax = here.sectorZ+survivorRadius;
+
+	std::map<SystemPath,StarSystem*>::iterator i = s_cachedSystems.begin();
+	while (i != s_cachedSystems.end()) {
+		StarSystem *s = (*i).second;
+
+		const bool outsideVolume = clear || !WithinBox(s->GetPath(), xmin, xmax, ymin, ymax, zmin, zmax);
+
+		assert(s->GetRefCount() >= 1); // sanity check
+		// if the cache is the only owner, then delete it
+		if (outsideVolume && s->GetRefCount() == 1) {
+			delete s;
+			s_cachedSystems.erase(i++);
+		} else {
+			i++;
+		}
+	}
 }

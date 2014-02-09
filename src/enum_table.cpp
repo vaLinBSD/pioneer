@@ -13,6 +13,7 @@
 #include "ShipType.h"
 #include "galaxy/StarSystem.h"
 #include "gameui/Face.h"
+#include "scenegraph/Model.h"
 #include "ui/Align.h"
 #include "ui/Event.h"
 #include "ui/Expand.h"
@@ -311,6 +312,16 @@ const struct EnumItem ENUM_GameUIFaceFlags[] = {
 	{ 0, 0 },
 };
 
+const struct EnumItem ENUM_ModelDebugFlags[] = {
+	{ "NONE", SceneGraph::Model::DEBUG_NONE },
+	{ "BBOX", SceneGraph::Model::DEBUG_BBOX },
+	{ "COLLMESH", SceneGraph::Model::DEBUG_COLLMESH },
+	{ "WIREFRAME", SceneGraph::Model::DEBUG_WIREFRAME },
+	{ "TAGS", SceneGraph::Model::DEBUG_TAGS },
+	{ "DOCKING", SceneGraph::Model::DEBUG_DOCKING },
+	{ 0, 0 },
+};
+
 const struct EnumItem ENUM_UIAlignDirection[] = {
 	{ "TOP_LEFT", UI::Align::TOP_LEFT },
 	{ "TOP", UI::Align::TOP },
@@ -442,6 +453,11 @@ const struct EnumItem ENUM_UIFont[] = {
 	{ "HEADING_NORMAL", UI::Widget::FONT_HEADING_NORMAL },
 	{ "HEADING_LARGE", UI::Widget::FONT_HEADING_LARGE },
 	{ "HEADING_XLARGE", UI::Widget::FONT_HEADING_XLARGE },
+	{ "MONO_XSMALL", UI::Widget::FONT_MONO_XSMALL },
+	{ "MONO_SMALL", UI::Widget::FONT_MONO_SMALL },
+	{ "MONO_NORMAL", UI::Widget::FONT_MONO_NORMAL },
+	{ "MONO_LARGE", UI::Widget::FONT_MONO_LARGE },
+	{ "MONO_XLARGE", UI::Widget::FONT_MONO_XLARGE },
 	{ "INHERIT", UI::Widget::FONT_INHERIT },
 	{ 0, 0 },
 };
@@ -466,6 +482,7 @@ const struct EnumTable ENUM_TABLES[] = {
 	{ "BodyType", ENUM_BodyType },
 	{ "BodySuperType", ENUM_BodySuperType },
 	{ "GameUIFaceFlags", ENUM_GameUIFaceFlags },
+	{ "ModelDebugFlags", ENUM_ModelDebugFlags },
 	{ "UIAlignDirection", ENUM_UIAlignDirection },
 	{ "UIEventType", ENUM_UIEventType },
 	{ "UIKeyboardAction", ENUM_UIKeyboardAction },
@@ -504,6 +521,7 @@ const struct EnumTable ENUM_TABLES_PUBLIC[] = {
 	{ "BodyType", ENUM_BodyType },
 	{ "BodySuperType", ENUM_BodySuperType },
 	{ "GameUIFaceFlags", ENUM_GameUIFaceFlags },
+	{ "ModelDebugFlags", ENUM_ModelDebugFlags },
 	{ "UIAlignDirection", ENUM_UIAlignDirection },
 	{ "UIEventType", ENUM_UIEventType },
 	{ "UIKeyboardAction", ENUM_UIKeyboardAction },

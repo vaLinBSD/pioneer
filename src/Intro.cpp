@@ -23,7 +23,7 @@ Intro::Intro(Graphics::Renderer *r, int width, int height)
 {
 	using Graphics::Light;
 
-	m_background.reset(new Background::Container(r, UNIVERSE_SEED));
+	m_background.reset(new Background::Container(r, Pi::rng));
 	m_ambientColor = Color(0);
 
 	const Color one = Color::WHITE;
@@ -116,16 +116,14 @@ void Intro::Draw(float _time)
 	m_renderer->SetPerspectiveProjection(75, m_aspectRatio, 1.f, 10000.f);
 	m_renderer->SetTransform(matrix4x4f::Identity());
 
-	m_renderer->SetDepthTest(true);
-	m_renderer->SetDepthWrite(true);
-
 	m_renderer->SetAmbientColor(m_ambientColor);
 	m_renderer->SetLights(m_lights.size(), &m_lights[0]);
 
 	// XXX all this stuff will be gone when intro uses a Camera
 	// rotate background by time, and a bit extra Z so it's not so flat
 	matrix4x4d brot = matrix4x4d::RotateXMatrix(-0.25*_time) * matrix4x4d::RotateZMatrix(0.6);
-	m_background->Draw(m_renderer, brot);
+	m_renderer->ClearDepthBuffer();
+	m_background->Draw(brot);
 
 	m_renderer->SetViewport(m_spinnerLeft, 0, m_spinnerWidth, Graphics::GetScreenHeight());
 	m_renderer->SetPerspectiveProjection(75, m_spinnerRatio, 1.f, 10000.f);

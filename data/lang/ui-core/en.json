@@ -223,6 +223,10 @@
       "description" : "",
       "message" : "Display speed lines"
    },
+   "DISPLAY_HUD_TRAILS" : {
+      "description" : "",
+      "message" : "Display HUD trails"
+   },
    "DOCK_AT_CURRENT_TARGET" : {
       "description" : "",
       "message" : "Dock at current target"
@@ -530,6 +534,10 @@
    "MAX" : {
       "description" : "",
       "message" : "max"
+   },
+   "MAXIMUM_CREW" : {
+      "description" : "",
+      "message" : "Maximum crew"
    },
    "MEDIUM" : {
       "description" : "",
@@ -925,7 +933,7 @@
    },
    "WEIGHT_EMPTY" : {
       "description" : "",
-      "message" : "Weight empty:"
+      "message" : "Weight empty"
    },
    "WEIGHT_FULLY_LOADED" : {
       "description" : "",

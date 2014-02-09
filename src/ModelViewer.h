@@ -41,9 +41,6 @@ private:
 	void ClearModel();
 	void CreateTestResources();
 	void DrawBackground();
-	void DrawTags();
-	void DrawDockingLocators();
-	void DrawCollisionMesh();
 	void DrawGrid(const matrix4x4f &trans, float radius);
 	void DrawLog();
 	void DrawModel();
@@ -74,6 +71,7 @@ private:
 		bool showTags;
 		bool showDockingLocators;
 		bool showCollMesh;
+		bool showAabb;
 		bool showShields;
 		bool showGrid;
 		bool showLandingPad;
@@ -100,12 +98,14 @@ private:
 	SceneGraph::Animation *m_currentAnimation;
 	SceneGraph::Model *m_model;
 	Options m_options;
+	float m_landingMinOffset;
 	std::unique_ptr<NavLights> m_navLights;
 	std::unique_ptr<Shields> m_shields;
 	std::unique_ptr<SceneGraph::Model> m_gunModel;
 	std::unique_ptr<SceneGraph::Model> m_scaleModel;
 	std::string m_modelName;
 	RefCountedPtr<UI::Context> m_ui;
+	Graphics::RenderState *m_bgState;
 
 	//undecided on this input stuff
 	//updating the states of all inputs during PollEvents
@@ -128,9 +128,6 @@ private:
 	UI::Slider *thrustSliders[2*3]; //thruster sliders 2*xyz (linear & angular)
 
 	sigc::signal<void> onModelChanged;
-
-	std::vector<Graphics::Drawables::Line3D> m_dockingPoints;
-	std::vector<Graphics::Drawables::Line3D> m_tagPoints;
 };
 
 #endif

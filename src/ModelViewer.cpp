@@ -23,6 +23,7 @@ ModelViewer::Options::Options()
 , showTags(false)
 , showDockingLocators(false)
 , showCollMesh(false)
+, showAabb(false)
 , showShields(false)
 , showGrid(false)
 , showLandingPad(false)
@@ -111,6 +112,12 @@ ModelViewer::ModelViewer(Graphics::Renderer *r, LuaManager *lm)
 	animSlider = 0;
 
 	onModelChanged.connect(sigc::mem_fun(*this, &ModelViewer::SetupUI));
+
+	//for grid, background
+	Graphics::RenderStateDesc rsd;
+	rsd.depthWrite = false;
+	rsd.cullMode = Graphics::CULL_NONE;
+	m_bgState = m_renderer->CreateRenderState(rsd);
 }
 
 ModelViewer::~ModelViewer()
@@ -129,7 +136,7 @@ void ModelViewer::Run(const std::string &modelName)
 	FileSystem::Init();
 	FileSystem::userFiles.MakeDirectory(""); // ensure the config directory exists
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
-		OS::Error("SDL initialization failed: %s\n", SDL_GetError());
+		Error("SDL initialization failed: %s\n", SDL_GetError());
 	Lua::Init();
 
 	ModManager::Init();
@@ -189,6 +196,7 @@ bool ModelViewer::OnToggleCollMesh(UI::CheckBox *w)
 {
 	m_options.showDockingLocators = !m_options.showDockingLocators;
 	m_options.showCollMesh = !m_options.showCollMesh;
+	m_options.showAabb = m_options.showCollMesh;
 	return m_options.showCollMesh;
 }
 
@@ -246,7 +254,7 @@ bool ModelViewer::OnToggleGuns(UI::CheckBox *w)
 	return true;
 }
 
-void ModelViewer::UpdateShield() 
+void ModelViewer::UpdateShield()
 {
 	if (m_shieldIsHit) {
 		m_shieldHitPan += 0.05f;
@@ -283,7 +291,7 @@ void ModelViewer::AddLog(const std::string &line)
 {
 	m_log->AppendText(line+"\n");
 	m_logScroller->SetScrollPosition(1.0f);
-	printf("%s\n", line.c_str());
+	Output("%s\n", line.c_str());
 }
 
 void ModelViewer::ChangeCameraPreset(SDL_Keycode key, SDL_Keymod mod)
@@ -382,8 +390,6 @@ void ModelViewer::CreateTestResources()
 
 void ModelViewer::DrawBackground()
 {
-	m_renderer->SetDepthWrite(false);
-	m_renderer->SetBlendMode(Graphics::BLEND_SOLID);
 	m_renderer->SetOrthographicProjection(0.f, 1.f, 0.f, 1.f, -1.f, 1.f);
 	m_renderer->SetTransform(matrix4x4f::Identity());
 
@@ -399,79 +405,7 @@ void ModelViewer::DrawBackground()
 	va.Add(vector3f(1.f, 1.f, 0.f), top);
 	va.Add(vector3f(0.f, 1.f, 0.f), top);
 
-	m_renderer->DrawTriangles(&va, Graphics::vtxColorMaterial);
-}
-
-void AddAxisIndicators(const SceneGraph::Model::TVecMT &mts, std::vector<Graphics::Drawables::Line3D> &lines)
-{
-	for (SceneGraph::Model::TVecMT::const_iterator i = mts.begin(); i != mts.end(); ++i) {
-		const matrix4x4f &trans = (*i)->GetTransform();
-		const vector3f pos = trans.GetTranslate();
-		const matrix3x3f &orient = trans.GetOrient();
-		const vector3f x = orient.VectorX().Normalized();
-		const vector3f y = orient.VectorY().Normalized();
-		const vector3f z = orient.VectorZ().Normalized();
-
-		Graphics::Drawables::Line3D lineX;
-		lineX.SetStart(pos);
-		lineX.SetEnd(pos+x);
-		lineX.SetColor(Color::RED);
-
-		Graphics::Drawables::Line3D lineY;
-		lineY.SetStart(pos);
-		lineY.SetEnd(pos+y);
-		lineY.SetColor(Color::GREEN);
-
-		Graphics::Drawables::Line3D lineZ;
-		lineZ.SetStart(pos);
-		lineZ.SetEnd(pos+z);
-		lineZ.SetColor(Color::BLUE);
-
-		lines.push_back(lineX);
-		lines.push_back(lineY);
-		lines.push_back(lineZ);
-	}
-}
-
-void ModelViewer::DrawDockingLocators()
-{
-	for(std::vector<Graphics::Drawables::Line3D>::iterator i = m_dockingPoints.begin(); i != m_dockingPoints.end(); ++i)
-		(*i).Draw(m_renderer);
-}
-
-void ModelViewer::DrawTags()
-{
-	for(std::vector<Graphics::Drawables::Line3D>::iterator i = m_tagPoints.begin(); i != m_tagPoints.end(); ++i)
-		(*i).Draw(m_renderer);
-}
-
-// Draw collision mesh as a wireframe overlay
-void ModelViewer::DrawCollisionMesh()
-{
-	RefCountedPtr<CollMesh> mesh = m_model->GetCollisionMesh();
-	if (!mesh) return;
-
-	const vector3f *vertices = reinterpret_cast<const vector3f*>(mesh->GetGeomTree()->GetVertices());
-	const Uint16 *indices = mesh->GetGeomTree()->GetIndices();
-	const unsigned int *triFlags = mesh->GetGeomTree()->GetTriFlags();
-	const unsigned int numIndices = mesh->GetGeomTree()->GetNumTris() * 3;
-
-	Graphics::VertexArray va(Graphics::ATTRIB_POSITION | Graphics::ATTRIB_DIFFUSE, numIndices * 3);
-	int trindex = -1;
-	for(unsigned int i = 0; i < numIndices; i++) {
-		if (i % 3 == 0)
-			trindex++;
-		const unsigned int flag = triFlags[trindex];
-		//show special geomflags in red
-		va.Add(vertices[indices[i]], flag > 0 ? Color::RED : Color::WHITE);
-	}
-
-	//might want to add some offset
-	m_renderer->SetWireFrameMode(true);
-	Graphics::vtxColorMaterial->twoSided = true;
-	m_renderer->DrawTriangles(&va, Graphics::vtxColorMaterial);
-	Graphics::vtxColorMaterial->twoSided = false;
-	m_renderer->SetWireFrameMode(false);
+	m_renderer->DrawTriangles(&va, m_bgState, Graphics::vtxColorMaterial);
 }
 
 //Draw grid and axes
@@ -504,7 +438,7 @@ void ModelViewer::DrawGrid(const matrix4x4f &trans, float radius)
 	}
 
 	m_renderer->SetTransform(trans);
-	m_renderer->DrawLines(points.size(), &points[0], Color(128));//Color(0.0f,0.2f,0.0f,1.0f));
+	m_renderer->DrawLines(points.size(), &points[0], Color(128), m_bgState);//Color(0.0f,0.2f,0.0f,1.0f));
 
 	//industry-standard red/green/blue XYZ axis indiactor
 	const int numAxVerts = 6;
@@ -532,15 +466,12 @@ void ModelViewer::DrawGrid(const matrix4x4f &trans, float radius)
 		Color(0, 255, 0)
 	};
 
-	m_renderer->SetDepthTest(true);
-	m_renderer->SetDepthWrite(true);
-	m_renderer->DrawLines(numAxVerts, &vts[0], &col[0]);
+	m_renderer->DrawLines(numAxVerts, &vts[0], &col[0], m_bgState);
 }
 
 void ModelViewer::DrawModel()
 {
 	assert(m_model);
-	m_renderer->SetBlendMode(Graphics::BLEND_SOLID);
 
 	m_renderer->SetPerspectiveProjection(85, Graphics::GetScreenWidth()/float(Graphics::GetScreenHeight()), 0.1f, 10000.f);
 	m_renderer->SetTransform(matrix4x4f::Identity());
@@ -557,38 +488,25 @@ void ModelViewer::DrawModel()
 		mv = matrix4x4f::Translation(0.0f, 0.0f, -zoom_distance(m_baseDistance, m_zoom)) * rot;
 	}
 
-	if (m_options.showGrid)
-		DrawGrid(mv, m_model->GetDrawClipRadius());
-
-	m_renderer->SetDepthTest(true);
-	m_renderer->SetDepthWrite(true);
-
 	m_model->UpdateAnimations();
-	if (m_options.wireframe)
-		m_renderer->SetWireFrameMode(true);
+
+	m_model->SetDebugFlags(
+		(m_options.showAabb            ? SceneGraph::Model::DEBUG_BBOX      : 0x0) |
+		(m_options.showCollMesh        ? SceneGraph::Model::DEBUG_COLLMESH  : 0x0) |
+		(m_options.showTags            ? SceneGraph::Model::DEBUG_TAGS      : 0x0) |
+		(m_options.showDockingLocators ? SceneGraph::Model::DEBUG_DOCKING   : 0x0) |
+		(m_options.wireframe           ? SceneGraph::Model::DEBUG_WIREFRAME : 0x0)
+	);
+
 	m_model->Render(mv);
+
 	if (m_options.showLandingPad) {
 		if (!m_scaleModel) CreateTestResources();
-		const float landingPadOffset = m_model->GetCollisionMesh()->GetAabb().min.y;
-		m_scaleModel->Render(mv * matrix4x4f::Translation(0.f, landingPadOffset, 0.f));
-	}
-	if (m_options.wireframe)
-		m_renderer->SetWireFrameMode(false);
-
-	if (m_options.showCollMesh) {
-		m_renderer->SetTransform(mv);
-		DrawCollisionMesh();
+		m_scaleModel->Render(mv * matrix4x4f::Translation(0.f, m_landingMinOffset, 0.f));
 	}
 
-	if (m_options.showDockingLocators) {
-		m_renderer->SetTransform(mv);
-		DrawDockingLocators();
-	}
-
-	if (m_options.showTags) {
-		m_renderer->SetTransform(mv);
-		DrawTags();
-	}
+	if (m_options.showGrid)
+		DrawGrid(mv, m_model->GetDrawClipRadius());
 }
 
 void ModelViewer::MainLoop()
@@ -878,27 +796,20 @@ void ModelViewer::SetModel(const std::string &filename, bool resetCamera /* true
 		m_model->GetRoot()->Accept(d);
 		AddLog(d.GetModelStatistics());
 
+		// If we've got the tag_landing set then use it for an offset otherwise grab the AABB
+		const SceneGraph::MatrixTransform *mt = m_model->FindTagByName("tag_landing");
+		if (mt)
+			m_landingMinOffset = mt->GetTransform().GetTranslate().y;
+		else if (m_model->GetCollisionMesh())
+			m_landingMinOffset = m_model->GetCollisionMesh()->GetAabb().min.y;
+		else
+			m_landingMinOffset = 0.0f;
+
 		//note: stations won't demonstrate full docking light logic in MV
 		m_navLights.reset(new NavLights(m_model));
 		m_navLights->SetEnabled(true);
 
 		m_shields.reset(new Shields(m_model));
-
-		{
-			SceneGraph::Model::TVecMT mts;
-
-			m_dockingPoints.clear();
-			m_model->FindTagsByStartOfName("approach_", mts);
-			AddAxisIndicators(mts, m_dockingPoints);
-			m_model->FindTagsByStartOfName("docking_", mts);
-			AddAxisIndicators(mts, m_dockingPoints);
-			m_model->FindTagsByStartOfName("leaving_", mts);
-			AddAxisIndicators(mts, m_dockingPoints);
-
-			m_tagPoints.clear();
-			m_model->FindTagsByStartOfName("tag_", mts);
-			AddAxisIndicators(mts, m_tagPoints);
-		}
 	} catch (SceneGraph::LoadingError &err) {
 		// report the error and show model picker.
 		m_model = 0;
@@ -985,12 +896,12 @@ void ModelViewer::SetupUI()
 
 	const int spacing = 5;
 
-	UI::SmallButton *reloadButton;
-	UI::SmallButton *toggleGridButton;
-	UI::SmallButton *hitItButton;
-	UI::CheckBox *collMeshCheck;
-	UI::CheckBox *showShieldsCheck;
-	UI::CheckBox *gunsCheck;
+	UI::SmallButton *reloadButton = nullptr;
+	UI::SmallButton *toggleGridButton = nullptr;
+	UI::SmallButton *hitItButton = nullptr;
+	UI::CheckBox *collMeshCheck = nullptr;
+	UI::CheckBox *showShieldsCheck = nullptr;
+	UI::CheckBox *gunsCheck = nullptr;
 
 	UI::VBox* outerBox = c->VBox();
 
