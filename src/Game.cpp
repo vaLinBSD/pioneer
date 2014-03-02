@@ -24,7 +24,7 @@
 #include "FileSystem.h"
 #include "graphics/Renderer.h"
 
-static const int  s_saveVersion   = 71;
+static const int  s_saveVersion   = 72;
 static const char s_saveStart[]   = "PIONEER";
 static const char s_saveEnd[]     = "END";
 
@@ -129,21 +129,8 @@ Game::Game(Serializer::Reader &rd) :
 
 	Serializer::Reader section;
 
-	// space, all the bodies and things
-	section = rd.RdSection("Space");
-	m_space.reset(new Space(this, section));
-
-
-	// game state and space transition state
+	// game state
 	section = rd.RdSection("Game");
-
-	m_player.reset(static_cast<Player*>(m_space->GetBodyByIndex(section.Int32())));
-
-	// hyperspace clouds being brought over from the previous system
-	Uint32 nclouds = section.Int32();
-	for (Uint32 i = 0; i < nclouds; i++)
-		m_hyperspaceClouds.push_back(static_cast<HyperspaceCloud*>(Body::Unserialize(section, 0)));
-
 	m_time = section.Double();
 	m_state = State(section.Int32());
 
@@ -152,6 +139,18 @@ Game::Game(Serializer::Reader &rd) :
 	m_hyperspaceDuration = section.Double();
 	m_hyperspaceEndTime = section.Double();
 
+	// space, all the bodies and things
+	section = rd.RdSection("Space");
+	m_space.reset(new Space(this, section, m_time));
+	m_player.reset(static_cast<Player*>(m_space->GetBodyByIndex(section.Int32())));
+
+	// space transition state
+	section = rd.RdSection("HyperspaceClouds");
+
+	// hyperspace clouds being brought over from the previous system
+	Uint32 nclouds = section.Int32();
+	for (Uint32 i = 0; i < nclouds; i++)
+		m_hyperspaceClouds.push_back(static_cast<HyperspaceCloud*>(Body::Unserialize(section, 0)));
 
 	// system political stuff
 	section = rd.RdSection("Polit");
@@ -183,21 +182,7 @@ void Game::Serialize(Serializer::Writer &wr)
 
 	Serializer::Writer section;
 
-	// space, all the bodies and things
-	m_space->Serialize(section);
-	wr.WrSection("Space", section.GetData());
-
-
-	// game state and space transition state
-	section = Serializer::Writer();
-
-	section.Int32(m_space->GetIndexForBody(m_player.get()));
-
-	// hyperspace clouds being brought over from the previous system
-	section.Int32(m_hyperspaceClouds.size());
-	for (std::list<HyperspaceCloud*>::const_iterator i = m_hyperspaceClouds.begin(); i != m_hyperspaceClouds.end(); ++i)
-		(*i)->Serialize(section, m_space.get());
-
+	// game state
 	section.Double(m_time);
 	section.Int32(Uint32(m_state));
 
@@ -207,6 +192,24 @@ void Game::Serialize(Serializer::Writer &wr)
 	section.Double(m_hyperspaceEndTime);
 
 	wr.WrSection("Game", section.GetData());
+
+
+	// space, all the bodies and things
+	section = Serializer::Writer();
+	m_space->Serialize(section);
+	section.Int32(m_space->GetIndexForBody(m_player.get()));
+	wr.WrSection("Space", section.GetData());
+
+
+	// space transition state
+	section = Serializer::Writer();
+
+	// hyperspace clouds being brought over from the previous system
+	section.Int32(m_hyperspaceClouds.size());
+	for (std::list<HyperspaceCloud*>::const_iterator i = m_hyperspaceClouds.begin(); i != m_hyperspaceClouds.end(); ++i)
+		(*i)->Serialize(section, m_space.get());
+
+	wr.WrSection("HyperspaceClouds", section.GetData());
 
 
 	// system political data (crime etc)
@@ -244,6 +247,8 @@ void Game::TimeStep(float step)
 {
 	PROFILE_SCOPED()
 	m_time += step;			// otherwise planets lag time accel changes by a frame
+	if (m_state == STATE_HYPERSPACE && Pi::game->GetTime() >= m_hyperspaceEndTime)
+		m_time = m_hyperspaceEndTime;
 
 	m_space->TimeStep(step);
 
@@ -252,7 +257,7 @@ void Game::TimeStep(float step)
 	Sfx::TimeStepAll(step, m_space->GetRootFrame());
 
 	if (m_state == STATE_HYPERSPACE) {
-		if (Pi::game->GetTime() > m_hyperspaceEndTime) {
+		if (Pi::game->GetTime() >= m_hyperspaceEndTime) {
 			SwitchToNormalSpace();
 			m_player->EnterSystem();
 			RequestTimeAccel(TIMEACCEL_1X);
@@ -286,8 +291,8 @@ bool Game::UpdateTimeAccel()
 		RequestTimeAccel(newTimeAccel);
 	}
 
-	// force down to timeaccel 1 during the docking sequence
-	else if (m_player->GetFlightState() == Ship::DOCKING) {
+	// force down to timeaccel 1 during the docking sequence or when just initiating hyperspace
+	else if (m_player->GetFlightState() == Ship::DOCKING || m_player->GetFlightState() == Ship::JUMPING) {
 		newTimeAccel = std::min(newTimeAccel, Game::TIMEACCEL_10X);
 		RequestTimeAccel(newTimeAccel);
 	}
@@ -303,13 +308,13 @@ bool Game::UpdateTimeAccel()
 
 		else if (!m_forceTimeAccel) {
 			// check we aren't too near to objects for timeaccel //
-			for (Space::BodyIterator i = m_space->BodiesBegin(); i != m_space->BodiesEnd(); ++i) {
-				if ((*i) == m_player.get()) continue;
-				if ((*i)->IsType(Object::HYPERSPACECLOUD)) continue;
+			for (const Body* b : m_space->GetBodies()) {
+				if (b == m_player.get()) continue;
+				if (b->IsType(Object::HYPERSPACECLOUD)) continue;
 
-				vector3d toBody = m_player->GetPosition() - (*i)->GetPositionRelTo(m_player->GetFrame());
+				vector3d toBody = m_player->GetPosition() - b->GetPositionRelTo(m_player->GetFrame());
 				double dist = toBody.Length();
-				double rad = (*i)->GetPhysRadius();
+				double rad = b->GetPhysRadius();
 
 				if (dist < 1000.0) {
 					newTimeAccel = std::min(newTimeAccel, Game::TIMEACCEL_1X);
@@ -372,12 +377,12 @@ void Game::SwitchToHyperspace()
 	// find all the departure clouds, convert them to arrival clouds and store
 	// them for the next system
 	m_hyperspaceClouds.clear();
-	for (Space::BodyIterator i = m_space->BodiesBegin(); i != m_space->BodiesEnd(); ++i) {
+	for (Body* b : m_space->GetBodies()) {
 
-		if (!(*i)->IsType(Object::HYPERSPACECLOUD)) continue;
+		if (!b->IsType(Object::HYPERSPACECLOUD)) continue;
 
 		// only want departure clouds with ships in them
-		HyperspaceCloud *cloud = static_cast<HyperspaceCloud*>(*i);
+		HyperspaceCloud *cloud = static_cast<HyperspaceCloud*>(b);
 		if (cloud->IsArrival() || cloud->GetShip() == 0)
 			continue;
 
@@ -520,14 +525,14 @@ void Game::SwitchToNormalSpace()
 					// itself out long before the player can get near
 
 					SystemBody *sbody = m_space->GetStarSystem()->GetBodyByPath(&sdest);
-					if (sbody->type == SystemBody::TYPE_STARPORT_ORBITAL) {
+					if (sbody->GetType() == SystemBody::TYPE_STARPORT_ORBITAL) {
 						ship->SetFrame(target_body->GetFrame());
 						ship->SetPosition(MathUtil::RandomPointOnSphere(1000.0)*1000.0); // somewhere 1000km out
 					}
 
 					else {
-						if (sbody->type == SystemBody::TYPE_STARPORT_SURFACE) {
-							sbody = sbody->parent;
+						if (sbody->GetType() == SystemBody::TYPE_STARPORT_SURFACE) {
+							sbody = sbody->GetParent();
 							SystemPath path = m_space->GetStarSystem()->GetPathOf(sbody);
 							target_body = m_space->FindBodyForPath(&path);
 						}
@@ -547,7 +552,7 @@ void Game::SwitchToNormalSpace()
 	}
 	m_hyperspaceClouds.clear();
 
-	m_space->GetBackground()->SetDrawFlags( Background::Container::DRAW_SKYBOX );
+	m_space->GetBackground()->SetDrawFlags( Background::Container::DRAW_SKYBOX | Background::Container::DRAW_STARS );
 
 	m_state = STATE_NORMAL;
 }
@@ -584,9 +589,9 @@ void Game::SetTimeAccel(TimeAccel t)
 
 	// Give all ships a half-step acceleration to stop autopilot overshoot
 	if (t < m_timeAccel)
-		for (Space::BodyIterator i = m_space->BodiesBegin(); i != m_space->BodiesEnd(); ++i)
-			if ((*i)->IsType(Object::SHIP))
-				(static_cast<Ship*>(*i))->TimeAccelAdjust(0.5f * GetTimeStep());
+		for (Body* b : m_space->GetBodies())
+			if (b->IsType(Object::SHIP))
+				(static_cast<Ship*>(b))->TimeAccelAdjust(0.5f * GetTimeStep());
 
 	m_timeAccel = t;
 

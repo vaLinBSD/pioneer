@@ -23,9 +23,6 @@ public:
 	static const float SIZE;
 	~Sector();
 
-	Sector(const Sector&) = delete;
-	Sector& operator=(const Sector&) = delete;
-
 	static float DistanceBetween(RefCountedPtr<const Sector> a, int sysIdxA, RefCountedPtr<const Sector> b, int sysIdxB);
 	static void Init();
 
@@ -40,7 +37,7 @@ public:
 
 	class System {
 	public:
-		System(int x, int y, int z, Uint32 si): customSys(0), population(-1), sx(x), sy(y), sz(z), idx(si) {};
+		System(int x, int y, int z, Uint32 si): customSys(0), population(-1), explored(false), sx(x), sy(y), sz(z), idx(si) {};
 		~System() {};
 
 		// Check that we've had our habitation status set
@@ -54,6 +51,7 @@ public:
 		const CustomSystem *customSys;
 		Faction *faction;
 		fixed population;
+		bool explored;
 
 		vector3f FullPosition() { return Sector::SIZE*vector3f(float(sx), float(sy), float(sz)) + p; };
 		bool IsSameSystem(const SystemPath &b) const {
@@ -66,11 +64,14 @@ public:
 	std::vector<System> m_systems;
 
 private:
+	Sector(const Sector&); // non-copyable
+	Sector& operator=(const Sector&); // non-assignable
+
 	int sx, sy, sz;
 	bool m_factionsAssigned;
 
 	Sector(const SystemPath& path); // Only SectorCache(Job) are allowed to create sectors
-	void GetCustomSystems();
+	void GetCustomSystems(Random& rng);
 	const std::string GenName(System &sys, int si, Random &rand);
 	// sets appropriate factions for all systems in the sector
 	void AssignFactions();
