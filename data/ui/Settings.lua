@@ -5,7 +5,7 @@ local Game = import("Game")
 local Engine = import("Engine")
 local Lang = import("Lang")
 local utils = import("utils")
-local TabGroup = import("ui/TabGroup")
+local TabView = import("ui/TabView")
 local SmallLabeledButton = import("ui/SmallLabeledButton")
 local KeyBindingCapture = import("UI.Game.KeyBindingCapture")
 local AxisBindingCapture = import("UI.Game.AxisBindingCapture")
@@ -151,13 +151,19 @@ ui.templates.Settings = function (args)
 			return optionCheckBox(getter, setter, l.MUTE)
 		end
 
-		return ui:VBox():PackEnd(ui:Grid({1,2,1}, 3)
-			:SetCell(0,0,muteBox(Engine.GetMasterMuted, Engine.SetMasterMuted))
-			:SetCell(1,0,volumeSlider(l.MASTER_VOL, Engine.GetMasterVolume, Engine.SetMasterVolume))
-			:SetCell(0,1,muteBox(Engine.GetMusicMuted, Engine.SetMusicMuted))
-			:SetCell(1,1,volumeSlider(l.MUSIC, Engine.GetMusicVolume, Engine.SetMusicVolume))
-			:SetCell(0,2,muteBox(Engine.GetEffectsMuted, Engine.SetEffectsMuted))
-			:SetCell(1,2,volumeSlider(l.EFFECTS, Engine.GetEffectsVolume, Engine.SetEffectsVolume)))
+		return ui:Table():SetColumnSpacing(10)
+			:AddRow({
+				muteBox(Engine.GetMasterMuted, Engine.SetMasterMuted),
+				volumeSlider(l.MASTER_VOL, Engine.GetMasterVolume, Engine.SetMasterVolume),
+			})
+			:AddRow({
+				muteBox(Engine.GetMusicMuted, Engine.SetMusicMuted),
+				volumeSlider(l.MUSIC, Engine.GetMusicVolume, Engine.SetMusicVolume),
+			})
+			:AddRow({
+				muteBox(Engine.GetEffectsMuted, Engine.SetEffectsMuted),
+				volumeSlider(l.EFFECTS, Engine.GetEffectsVolume, Engine.SetEffectsVolume),
+			})
 	end
 
 	local languageTemplate = function()
@@ -327,7 +333,7 @@ ui.templates.Settings = function (args)
 	end
 
 	local setTabs = nil
-	setTabs = TabGroup.New()
+	setTabs = TabView.New()
 	setTabs:AddTab({ id = "Video",    title = l.VIDEO,    icon = "VideoCamera", template = wrapWithScroller(videoTemplate)    })
 	setTabs:AddTab({ id = "Sound",    title = l.SOUND,    icon = "Speaker",     template = wrapWithScroller(soundTemplate)    })
 	setTabs:AddTab({ id = "Language", title = l.LANGUAGE, icon = "Globe1",      template = wrapWithScroller(languageTemplate) })
@@ -340,6 +346,9 @@ ui.templates.Settings = function (args)
 			local btn = ui:Button():SetInnerWidget(ui:Label(items[i].text))
 			btn.onClick:Connect(items[i].onClick)
 			close_buttons[i] = btn
+			if (items[i].toDisable and items[i].toDisable()) then
+				btn:Disable()
+			end
 		end
 	end
 
@@ -355,25 +364,32 @@ end
 ui.templates.SettingsInGame = function ()
 	return ui.templates.Settings({
 		closeButtons = {
-			{ text = l.SAVE, onClick = function ()
-				local settings_view = ui.layer.innerWidget
-				ui:NewLayer(
-					ui.templates.FileDialog({
-						title        = l.SAVE,
-						helpText     = l.SELECT_A_FILE_TO_SAVE_TO_OR_ENTER_A_NEW_FILENAME,
-						path         = "savefiles",
-						allowNewFile = true,
-						selectLabel  = l.SAVE,
-						onSelect     = function (filename)
-							Game.SaveGame(filename)
-							ui:DropLayer()
-						end,
-						onCancel    = function ()
-							ui:DropLayer()
-						end
-					})
-				)
-			end },
+			{
+				text = l.SAVE,
+				onClick = function ()
+					local settings_view = ui.layer.innerWidget
+					ui:NewLayer(
+						ui.templates.FileDialog({
+							title        = l.SAVE,
+							helpText     = l.SELECT_A_FILE_TO_SAVE_TO_OR_ENTER_A_NEW_FILENAME,
+							path         = "savefiles",
+							allowNewFile = true,
+							selectLabel  = l.SAVE,
+							onSelect     = function (filename)
+								Game.SaveGame(filename)
+								ui:DropLayer()
+							end,
+							onCancel    = function ()
+								ui:DropLayer()
+							end
+						})
+					)
+				end,
+				toDisable = function()
+					return Game.player.flightState == "HYPERSPACE"
+				end
+			},
+			{ text = l.RETURN_TO_GAME, onClick = Game.SwitchToWorldView },
 			{ text = l.EXIT_THIS_GAME, onClick = Game.EndGame }
 		}
 	})
